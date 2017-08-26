@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <errno.h>
+#include <string.h>
 
 /* imprimir el uso de tp0 */
 void print_usage() {
@@ -128,10 +129,10 @@ int main(int argc, char *argv[]) {
         char word[1024];
         i = read_word(input_file, word);
         if (es_capicua(word)){
-            printf("Capicua\n");
+            printf("%s es capicua\n", word);
         }
         else {
-            printf("No es capicua\n");
+            printf("%s no es capicua\n", word);
         }
     }
 
