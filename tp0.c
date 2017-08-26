@@ -129,11 +129,11 @@ int main(int argc, char *argv[]) {
         char word[1024];
         i = read_word(input_file, word);
         if (es_capicua(word)){
-            printf("%s es capicua\n", word);
+            fprintf(output_file,"%s\n", word);
         }
-        else {
+        /*else {
             printf("%s no es capicua\n", word);
-        }
+        }*/
     }
 
 
