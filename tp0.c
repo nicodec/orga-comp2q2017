@@ -23,10 +23,18 @@ void print_version(){
 
 /* funcion para determinar si una palabra es capicua o no */
 int es_capicua(char *palabra){
-    if (palabra[0] > 96){
-        return 1;
+
+    size_t len = strlen(palabra);
+
+    int capicua = 1;
+    int i=0;
+    while (capicua && i < (len / 2)){
+        if (palabra[i] != palabra[len - i - 1]){
+            return 0;
+        }
+        i++;
     }
-    return 0;
+    return 1;
 }
 
 int read_word (FILE *f, char *word) {
