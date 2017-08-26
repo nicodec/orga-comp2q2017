@@ -14,7 +14,17 @@ void print_usage() {
 
 /* imprimir la pagina de ayuda */
 void print_help() {
-    printf("This is the help message\n");
+    printf("\tUsage:\n"
+    	"\t\ttp0 -h\n"
+    	"\t\ttp0 -V\n"
+    	"\t\ttp0 [options]\n"
+    	"\tOptions:\n"
+    	"\t\t-V, --version\tPrint version and quit.\n"
+    	"\t\t-h, --help\tPrint this information.\n"
+    	"\t\t-i, --input\tLocation of the input file.\n"
+    	"\t\t-o, --output\tLocation of the output file.\n"
+    	"\tExamples:\n"
+    	"\t\ttp0 -i ~/input -o ~/output\n");
 }
 
 /* imprimir la version del programa */
