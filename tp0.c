@@ -24,7 +24,7 @@ void print_version(){
 /* funcion para determinar si una palabra es capicua o no */
 int es_capicua(char *palabra){
 
-    size_t len = strlen(palabra);
+    size_t len = strlen(palabra); //  hay que ver si se puede usar strlen
 
     int capicua = 1;
     int i=0;
