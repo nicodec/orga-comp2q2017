@@ -40,7 +40,7 @@ int es_capicua(char *palabra){
     int capicua = 1;
     int i=0;
     while (capicua && i < (len / 2)){
-        if (palabra[i] != palabra[len - i - 1]){
+        if (tolower(palabra[i]) != tolower(palabra[len - i - 1])){
             return 0;
         }
         i++;
@@ -93,6 +93,8 @@ int main(int argc, char *argv[]) {
                 output = 0;
                 output_filename = optarg;
                 break;
+            case '?':
+            	exit(1);
             default:
                 print_usage(); 
                 exit(EXIT_FAILURE);
@@ -137,9 +139,9 @@ int main(int argc, char *argv[]) {
     int i = 1;
     while (i == 1){
         char word[1024];
-        i = read_word(input_file, word);
+		i = read_word(input_file, word);
         if (es_capicua(word)){
-            fprintf(output_file,"%s\n", word);
+        	fprintf(output_file,"%s\n", word);
         }
         /*else {
             printf("%s no es capicua\n", word);
