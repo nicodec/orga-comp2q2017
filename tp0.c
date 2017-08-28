@@ -111,10 +111,7 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
-    /* Si no se recibe parametro de ayuda o version se ejecuta el programa */ 
-    // a modo de debug... 
-    printf("archivo entrada: %s\n", input_filename);
-    printf("archivo salida: %s\n", output_filename);
+    /* Si no se recibe parametro de ayuda o version se ejecuta el programa */
 
     // estableciendo los archivos de entrada y salida
     FILE *input_file = stdin;
@@ -136,16 +133,13 @@ int main(int argc, char *argv[]) {
     }
 
     /* ejecucion del programa */
-    int i = 1;
+    char word[1024];
+    int i = read_word(input_file, word);
     while (i == 1){
-        char word[1024];
-		i = read_word(input_file, word);
         if (es_capicua(word)){
         	fprintf(output_file,"%s\n", word);
         }
-        /*else {
-            printf("%s no es capicua\n", word);
-        }*/
+		i = read_word(input_file, word);
     }
 
 
