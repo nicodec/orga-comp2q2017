@@ -1,0 +1,34 @@
+Compiling Source
+Compilation Success
+Starting Tests
+
+Test: one_letter_a
+[1;32mTest passed[0m
+
+Test: empty_file
+[1;32mTest passed[0m
+
+Test: no_palindroms
+[1;32mTest passed[0m
+
+Test: todos_palindromos
+[1;32mTest passed[0m
+
+Test: varias_lineas
+[1;32mTest passed[0m
+
+Test: all_letters
+[1;32mTest passed[0m
+
+Test: case_sensitive
+[1;32mTest passed[0m
+
+Test: numbers_and_letters
+[1;32mTest passed[0m
+
+Test: text_with_dash
+[1;32mTest passed[0m
+
+--------------------
+[92mAll 9 tests passed!!![0m
+--------------------

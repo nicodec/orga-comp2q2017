@@ -48,6 +48,7 @@ int es_capicua(char *palabra){
     return 1;
 }
 
+/* Lee la palabra de un archivo y la devuelve en word */
 int read_word (FILE *f, char *word) {
     return fscanf(f, " %1023s", word);
 }
