@@ -7,12 +7,44 @@
 #include <errno.h>
 #include <string.h>
 
+int N = 100;
+
+typedef struct {
+  char *array;
+  size_t used;
+  size_t size;
+} WordArray;
+
+void init_array(WordArray *a, size_t initial_size){
+    a->array = (char*)malloc(sizeof(char*)*initial_size);
+    a->used = 0;
+    a->size = initial_size;
+}
+
+void insert_char(WordArray *a, char c){
+    if (a->used == a->size){
+        size_t new_size = a->size*2;
+        a->array = (char*)realloc(a->array, sizeof(char*)*new_size);
+        a->size = new_size;
+    }
+    a->array[a->used]=c;
+    a->array[a->used+1]='\0';
+    a->used++;
+}
+
+void free_array(WordArray *a){
+    free(a->array);
+    a->array = NULL;
+    a->size = a->used = 0;
+}
+
 /* imprimir el uso de tp0 */
 void print_usage() {
     printf("Usage: tp0 -i [input_file] -o [output_file]\n");
 }
 
 /* imprimir la pagina de ayuda */
+
 void print_help() {
     printf("\tUsage:\n"
     	"\t\ttp0 -h\n"
@@ -134,7 +166,8 @@ int main(int argc, char *argv[]) {
     }
 
     /* ejecucion del programa */
-    char word[100];
+    printf("A\n");
+    /*char *word = malloc(sizeof(char *) * N);
     int i = read_word(input_file, word);
     while (i == 1){
         if (es_capicua(word)){
@@ -142,6 +175,18 @@ int main(int argc, char *argv[]) {
         }
 		i = read_word(input_file, word);
     }
+    free(word);*/
+
+    printf("Hola\n");
+    WordArray a;
+    init_array(&a, 1);
+    insert_char(&a, 'a');
+    insert_char(&a, 'a');
+    insert_char(&a, 'a');
+    insert_char(&a, 'a');
+    printf("%zd\n", a.size);
+    printf("%s\n", a.array);
+    free_array(&a);
 
 
     // cierro los archivos
