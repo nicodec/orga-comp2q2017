@@ -13,12 +13,23 @@ typedef struct {
   char *array;
   size_t used;
   size_t size;
+  size_t initial_size;
 } WordArray;
 
 void init_array(WordArray *a, size_t initial_size){
     a->array = (char*)malloc(sizeof(char*)*initial_size);
     a->used = 0;
     a->size = initial_size;
+    a->initial_size = initial_size;
+    a->array[0] = '\0';
+}
+
+void clear_array(WordArray *a){
+    free(a->array);
+    a->array = (char*)malloc(sizeof(char*)*a->initial_size);
+    a->used = 0;
+    a->size = a->initial_size;
+    a->array[0] = '\0';
 }
 
 void insert_char(WordArray *a, char c){
@@ -61,18 +72,19 @@ void print_help() {
 
 /* imprimir la version del programa */
 void print_version(){
-    printf("tp0 1.0\n");
+    printf("tp0 2.0\n");
 }
 
 /* funcion para determinar si una palabra es capicua o no */
-int es_capicua(char *palabra){
+int es_capicua(WordArray *word){
 
-    size_t len = strlen(palabra); //  hay que ver si se puede usar strlen
+    size_t len = word->used;
+    if (len == 0) return 0;
 
     int capicua = 1;
     int i=0;
     while (capicua && i < (len / 2)){
-        if (tolower(palabra[i]) != tolower(palabra[len - i - 1])){
+        if (tolower(word->array[i]) != tolower(word->array[len - i - 1])){
             return 0;
         }
         i++;
@@ -81,8 +93,21 @@ int es_capicua(char *palabra){
 }
 
 /* Lee la palabra de un archivo y la devuelve en word */
-int read_word (FILE *f, char *word) {
-    return fscanf(f, " %99s", word);
+int read_word (FILE *f, WordArray *word) {
+    char c = fgetc(f);
+    if (c == EOF) return 0;
+    while (1){
+        if ( (65 <= c && c <= 90) || //letras mayusculas
+             (97 <= c && c <= 122) || //letras minusculas
+             (48 <= c && c <= 57) || //numeros
+             c == 95 || c == 45){ //barras
+            insert_char(word,c);
+        }else{
+            return 1;
+        }
+        c = fgetc(f);
+    }
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -141,7 +166,7 @@ int main(int argc, char *argv[]) {
     }
     else if (version == 0) {
         print_version();
-        exit(0);
+        exit(0);    
     }
 
     /* Si no se recibe parametro de ayuda o version se ejecuta el programa */
@@ -166,28 +191,18 @@ int main(int argc, char *argv[]) {
     }
 
     /* ejecucion del programa */
-    printf("A\n");
-    /*char *word = malloc(sizeof(char *) * N);
-    int i = read_word(input_file, word);
+
+    WordArray word;
+    init_array(&word,N);
+    int i = read_word(input_file, &word);
     while (i == 1){
-        if (es_capicua(word)){
-        	fprintf(output_file,"%s\n", word);
+        if (es_capicua(&word)){
+        	fprintf(output_file,"%s\n", word.array);
         }
-		i = read_word(input_file, word);
+        clear_array(&word);
+        i = read_word(input_file, &word);
     }
-    free(word);*/
-
-    printf("Hola\n");
-    WordArray a;
-    init_array(&a, 1);
-    insert_char(&a, 'a');
-    insert_char(&a, 'a');
-    insert_char(&a, 'a');
-    insert_char(&a, 'a');
-    printf("%zd\n", a.size);
-    printf("%s\n", a.array);
-    free_array(&a);
-
+    free_array(&word);
 
     // cierro los archivos
     
