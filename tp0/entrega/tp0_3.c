@@ -18,6 +18,10 @@ typedef struct {
 
 void init_array(WordArray *a, size_t initial_size){
     a->array = (char*)malloc(sizeof(char*)*initial_size);
+    if (a->array == NULL){
+        fprintf(stderr, "Error while allocating memory at init_array\n");
+        exit(1);
+    }
     a->used = 0;
     a->size = initial_size;
     a->initial_size = initial_size;
@@ -27,6 +31,10 @@ void init_array(WordArray *a, size_t initial_size){
 void clear_array(WordArray *a){
     free(a->array);
     a->array = (char*)malloc(sizeof(char*)*a->initial_size);
+    if (a->array == NULL){
+        fprintf(stderr, "Error while allocating memory at clear_array\n");
+        exit(1);
+    }
     a->used = 0;
     a->size = a->initial_size;
     a->array[0] = '\0';
@@ -35,11 +43,19 @@ void clear_array(WordArray *a){
 void insert_char(WordArray *a, char c){
     if (a->used == a->size){
         size_t new_size = a->size*2;
-        a->array = (char*)realloc(a->array, sizeof(char*)*new_size);
+        char *new_array;
+        new_array = (char*)realloc(a->array, sizeof(char*)*new_size);
+        if (new_array != NULL){
+            a->array = new_array;
+        }
+        else{
+            free(a->array);
+            fprintf(stderr, "Error reallocating memory\n");
+            exit(1);
+        }
         a->size = new_size;
     }
     a->array[a->used]=c;
-    a->array[a->used+1]='\0';
     a->used++;
 }
 
@@ -77,8 +93,7 @@ void print_version(){
 
 /* funcion para determinar si una palabra es capicua o no */
 int es_capicua(WordArray *word){
-
-    size_t len = word->used;
+    size_t len = word->used-1;
     if (len == 0) return 0;
 
     int capicua = 1;
@@ -95,7 +110,13 @@ int es_capicua(WordArray *word){
 /* Lee la palabra de un archivo y la devuelve en word */
 int read_word (FILE *f, WordArray *word) {
     int c = fgetc(f);
-    if (c == EOF) return 0;
+    if (c == EOF){
+        if (ferror(f) != 0){
+            fprintf(stderr, "Error leyendo caracter\n");
+            exit(1);
+        }
+        return 0;
+    }
     while (1){
         if ( (65 <= c && c <= 90) || //letras mayusculas
              (97 <= c && c <= 122) || //letras minusculas
@@ -103,6 +124,11 @@ int read_word (FILE *f, WordArray *word) {
              c == 95 || c == 45){ //barras
             insert_char(word,c);
         }else{
+            if (ferror(f) != 0){
+                fprintf(stderr, "Error leyendo caracter\n");
+                exit(1);
+            }
+            insert_char(word,'\0');
             return 1;
         }
         c = fgetc(f);
@@ -197,7 +223,11 @@ int main(int argc, char *argv[]) {
     int i = read_word(input_file, &word);
     while (i == 1){
         if (es_capicua(&word)){
-        	fprintf(output_file,"%s\n", word.array);
+        	int e = fprintf(output_file,"%s\n", word.array);
+            if (e < 0){
+                fprintf(stderr, "Error writing at file\n");
+                exit(1);
+            }
         }
         clear_array(&word);
         i = read_word(input_file, &word);

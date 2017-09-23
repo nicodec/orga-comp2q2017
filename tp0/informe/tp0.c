@@ -7,12 +7,71 @@
 #include <errno.h>
 #include <string.h>
 
+int N = 100;
+
+typedef struct {
+  char *array;
+  size_t used;
+  size_t size;
+  size_t initial_size;
+} WordArray;
+
+void init_array(WordArray *a, size_t initial_size){
+    a->array = (char*)malloc(sizeof(char*)*initial_size);
+    if (a->array == NULL){
+        fprintf(stderr, "Error while allocating memory at init_array\n");
+        exit(1);
+    }
+    a->used = 0;
+    a->size = initial_size;
+    a->initial_size = initial_size;
+    a->array[0] = '\0';
+}
+
+void clear_array(WordArray *a){
+    free(a->array);
+    a->array = (char*)malloc(sizeof(char*)*a->initial_size);
+    if (a->array == NULL){
+        fprintf(stderr, "Error while allocating memory at clear_array\n");
+        exit(1);
+    }
+    a->used = 0;
+    a->size = a->initial_size;
+    a->array[0] = '\0';
+}
+
+void insert_char(WordArray *a, char c){
+    if (a->used == a->size){
+        size_t new_size = a->size*2;
+        char *new_array;
+        new_array = (char*)realloc(a->array, sizeof(char*)*new_size);
+        if (new_array != NULL){
+            a->array = new_array;
+        }
+        else{
+            free(a->array);
+            fprintf(stderr, "Error reallocating memory\n");
+            exit(1);
+        }
+        a->size = new_size;
+    }
+    a->array[a->used]=c;
+    a->used++;
+}
+
+void free_array(WordArray *a){
+    free(a->array);
+    a->array = NULL;
+    a->size = a->used = 0;
+}
+
 /* imprimir el uso de tp0 */
 void print_usage() {
     printf("Usage: tp0 -i [input_file] -o [output_file]\n");
 }
 
 /* imprimir la pagina de ayuda */
+
 void print_help() {
     printf("\tUsage:\n"
     	"\t\ttp0 -h\n"
@@ -29,18 +88,18 @@ void print_help() {
 
 /* imprimir la version del programa */
 void print_version(){
-    printf("tp0 1.0\n");
+    printf("tp0 2.0\n");
 }
 
 /* funcion para determinar si una palabra es capicua o no */
-int es_capicua(char *palabra){
-
-    size_t len = strlen(palabra); //  hay que ver si se puede usar strlen
+int es_capicua(WordArray *word){
+    size_t len = word->used-1;
+    if (len == 0) return 0;
 
     int capicua = 1;
     int i=0;
     while (capicua && i < (len / 2)){
-        if (tolower(palabra[i]) != tolower(palabra[len - i - 1])){
+        if (tolower(word->array[i]) != tolower(word->array[len - i - 1])){
             return 0;
         }
         i++;
@@ -48,8 +107,33 @@ int es_capicua(char *palabra){
     return 1;
 }
 
-int read_word (FILE *f, char *word) {
-    return fscanf(f, " %1023s", word);
+/* Lee la palabra de un archivo y la devuelve en word */
+int read_word (FILE *f, WordArray *word) {
+    int c = fgetc(f);
+    if (c == EOF){
+        if (ferror(f) != 0){
+            fprintf(stderr, "Error leyendo caracter\n");
+            exit(1);
+        }
+        return 0;
+    }
+    while (1){
+        if ( (65 <= c && c <= 90) || //letras mayusculas
+             (97 <= c && c <= 122) || //letras minusculas
+             (48 <= c && c <= 57) || //numeros
+             c == 95 || c == 45){ //barras
+            insert_char(word,c);
+        }else{
+            if (ferror(f) != 0){
+                fprintf(stderr, "Error leyendo caracter\n");
+                exit(1);
+            }
+            insert_char(word,'\0');
+            return 1;
+        }
+        c = fgetc(f);
+    }
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -108,7 +192,7 @@ int main(int argc, char *argv[]) {
     }
     else if (version == 0) {
         print_version();
-        exit(0);
+        exit(0);    
     }
 
     /* Si no se recibe parametro de ayuda o version se ejecuta el programa */
@@ -133,15 +217,22 @@ int main(int argc, char *argv[]) {
     }
 
     /* ejecucion del programa */
-    char word[1024];
-    int i = read_word(input_file, word);
-    while (i == 1){
-        if (es_capicua(word)){
-        	fprintf(output_file,"%s\n", word);
-        }
-		i = read_word(input_file, word);
-    }
 
+    WordArray word;
+    init_array(&word,N);
+    int i = read_word(input_file, &word);
+    while (i == 1){
+        if (es_capicua(&word)){
+        	int e = fprintf(output_file,"%s\n", word.array);
+            if (e < 0){
+                fprintf(stderr, "Error writing at file\n");
+                exit(1);
+            }
+        }
+        clear_array(&word);
+        i = read_word(input_file, &word);
+    }
+    free_array(&word);
 
     // cierro los archivos
     

@@ -6,5 +6,5 @@
 \contentsline {subsection}{\numberline {4.1}Corridas de Prueba}{3}
 \contentsline {section}{\numberline {5}Conclusi\IeC {\'o}n}{3}
 \contentsline {section}{\numberline {6}C\IeC {\'o}digo en C}{4}
-\contentsline {section}{\numberline {7}C\IeC {\'o}digo en MIPS}{8}
-\contentsline {section}{\numberline {8}Enunciado}{23}
+\contentsline {section}{\numberline {7}C\IeC {\'o}digo en MIPS}{9}
+\contentsline {section}{\numberline {8}Enunciado}{26}

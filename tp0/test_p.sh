@@ -57,7 +57,7 @@ then
 fi
 
 echo Compiling Source
-if ! gcc -Wall -o tp0 tp0_2.c; then
+if ! gcc -Wall -o tp0 tp0_3.c; then
   echo Compilation Failed
   exit 1
 fi
