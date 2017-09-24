@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <ctype.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <errno.h>
 #include <string.h>
 
-int N = 100;
+extern size_t mystrlen(const char*);
+extern int palindrome(int, size_t, int, size_t);
+
+/*int N = 100;
 
 typedef struct {
   char *array;
@@ -47,7 +49,7 @@ void free_array(WordArray *a){
     free(a->array);
     a->array = NULL;
     a->size = a->used = 0;
-}
+}*/
 
 /* imprimir el uso de tp0 */
 void print_usage() {
@@ -78,7 +80,7 @@ void print_version(){
 }
 
 /* funcion para determinar si una palabra es capicua o no */
-int es_capicua(WordArray *word){
+/*int es_capicua(WordArray *word){
 
     size_t len = word->used;
     if (len == 0) return 0;
@@ -92,10 +94,10 @@ int es_capicua(WordArray *word){
         i++;
     }
     return 1;
-}
+}*/
 
 /* Lee la palabra de un archivo y la devuelve en word */
-int read_word (FILE *f, WordArray *word) {
+/*int read_word (FILE *f, WordArray *word) {
     int c = fgetc(f);
     if (c == EOF) return 0;
     while (1){
@@ -110,7 +112,7 @@ int read_word (FILE *f, WordArray *word) {
         c = fgetc(f);
     }
     return 0;
-}
+}*/
 
 int main(int argc, char *argv[]) {
 
@@ -206,6 +208,9 @@ int main(int argc, char *argv[]) {
 
     printf("Ibuf: %i\n", ibuf);
     printf("Obuf: %i\n", obuf);
+
+    char *msg = "Estoy probando mips!!!\n";
+	write(1, msg, mystrlen(msg));
     
     /*WordArray word;
     init_array(&word,N);

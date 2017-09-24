@@ -56,13 +56,6 @@ then
 	touch ./tests/log_test
 fi
 
-echo Compiling Source
-if ! gcc -Wall -o tp1 tp1.c; then
-  echo Compilation Failed
-  exit 1
-fi
-echo Compilation Success
-
 echo "Starting Tests"
 echo
 

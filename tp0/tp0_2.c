@@ -66,13 +66,15 @@ void print_help() {
     	"\t\t-h, --help\tPrint this information.\n"
     	"\t\t-i, --input\tLocation of the input file.\n"
     	"\t\t-o, --output\tLocation of the output file.\n"
+        "\t\t-I, --ibuf-bytes\tByte count of the input buffer.\n"
+        "\t\t-O, --obuf-bytes\tByte count of the output buffer.\n"
     	"\tExamples:\n"
     	"\t\ttp0 -i ~/input -o ~/output\n");
 }
 
 /* imprimir la version del programa */
 void print_version(){
-    printf("tp0 2.0\n");
+    printf("tp1 1.0\n");
 }
 
 /* funcion para determinar si una palabra es capicua o no */
@@ -117,18 +119,22 @@ int main(int argc, char *argv[]) {
     int help = -1;
     int version = -1;
     int input = -1;
-    int output =-1;
+    int output = -1;
+    int ibuff = 1;
+    int obuff = 1;
 
     char *input_filename = NULL;
     char *output_filename = NULL;
 
     // especificacion de las opciones
     static struct option long_options[] = {
-        {"help",     no_argument,       0,  'h' },
-        {"version",  no_argument,       0,  'V' },
-        {"input",    required_argument, 0,  'i' },
-        {"output",   required_argument, 0,  'o' },
-        {0,          0,                 0,  0   }
+        {"help",         no_argument,       0,  'h' },
+        {"version",      no_argument,       0,  'V' },
+        {"input",        required_argument, 0,  'i' },
+        {"output",       required_argument, 0,  'o' },
+        {"ibuf-bytes",   required_argument, 0,  'I' },
+        {"obuf-bytes",   required_argument, 0,  'O' },
+        {0,              0,                 0,  0   }
     };
 
     int long_index = 0;
@@ -151,6 +157,10 @@ int main(int argc, char *argv[]) {
                 output = 0;
                 output_filename = optarg;
                 break;
+            case 'I':
+                ibuf
+            case 'O':
+                
             case '?':
             	exit(1);
             default:
