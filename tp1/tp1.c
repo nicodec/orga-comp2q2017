@@ -18,10 +18,6 @@ typedef struct {
 
 void init_array(WordArray *a, size_t initial_size){
     a->array = (char*)malloc(sizeof(char*)*initial_size);
-    if (a->array == NULL){
-        fprintf(stderr, "Error while allocating memory at init_array\n");
-        exit(1);
-    }
     a->used = 0;
     a->size = initial_size;
     a->initial_size = initial_size;
@@ -31,10 +27,6 @@ void init_array(WordArray *a, size_t initial_size){
 void clear_array(WordArray *a){
     free(a->array);
     a->array = (char*)malloc(sizeof(char*)*a->initial_size);
-    if (a->array == NULL){
-        fprintf(stderr, "Error while allocating memory at clear_array\n");
-        exit(1);
-    }
     a->used = 0;
     a->size = a->initial_size;
     a->array[0] = '\0';
@@ -43,19 +35,11 @@ void clear_array(WordArray *a){
 void insert_char(WordArray *a, char c){
     if (a->used == a->size){
         size_t new_size = a->size*2;
-        char *new_array;
-        new_array = (char*)realloc(a->array, sizeof(char*)*new_size);
-        if (new_array != NULL){
-            a->array = new_array;
-        }
-        else{
-            free(a->array);
-            fprintf(stderr, "Error reallocating memory\n");
-            exit(1);
-        }
+        a->array = (char*)realloc(a->array, sizeof(char*)*new_size);
         a->size = new_size;
     }
     a->array[a->used]=c;
+    a->array[a->used+1]='\0';
     a->used++;
 }
 
@@ -82,18 +66,21 @@ void print_help() {
     	"\t\t-h, --help\tPrint this information.\n"
     	"\t\t-i, --input\tLocation of the input file.\n"
     	"\t\t-o, --output\tLocation of the output file.\n"
+        "\t\t-I, --ibuf-bytes\tByte count of the input buffer.\n"
+        "\t\t-O, --obuf-bytes\tByte count of the output buffer.\n"
     	"\tExamples:\n"
     	"\t\ttp0 -i ~/input -o ~/output\n");
 }
 
 /* imprimir la version del programa */
 void print_version(){
-    printf("tp0 2.0\n");
+    printf("tp1 1.0\n");
 }
 
 /* funcion para determinar si una palabra es capicua o no */
 int es_capicua(WordArray *word){
-    size_t len = word->used-1;
+
+    size_t len = word->used;
     if (len == 0) return 0;
 
     int capicua = 1;
@@ -110,13 +97,7 @@ int es_capicua(WordArray *word){
 /* Lee la palabra de un archivo y la devuelve en word */
 int read_word (FILE *f, WordArray *word) {
     int c = fgetc(f);
-    if (c == EOF){
-        if (ferror(f) != 0){
-            fprintf(stderr, "Error leyendo caracter\n");
-            exit(1);
-        }
-        return 0;
-    }
+    if (c == EOF) return 0;
     while (1){
         if ( (65 <= c && c <= 90) || //letras mayusculas
              (97 <= c && c <= 122) || //letras minusculas
@@ -124,11 +105,6 @@ int read_word (FILE *f, WordArray *word) {
              c == 95 || c == 45){ //barras
             insert_char(word,c);
         }else{
-            if (ferror(f) != 0){
-                fprintf(stderr, "Error leyendo caracter\n");
-                exit(1);
-            }
-            insert_char(word,'\0');
             return 1;
         }
         c = fgetc(f);
@@ -143,24 +119,28 @@ int main(int argc, char *argv[]) {
     int help = -1;
     int version = -1;
     int input = -1;
-    int output =-1;
+    int output = -1;
+    int ibuf = 1;
+    int obuf = 1;
 
     char *input_filename = NULL;
     char *output_filename = NULL;
 
     // especificacion de las opciones
     static struct option long_options[] = {
-        {"help",     no_argument,       0,  'h' },
-        {"version",  no_argument,       0,  'V' },
-        {"input",    required_argument, 0,  'i' },
-        {"output",   required_argument, 0,  'o' },
-        {0,          0,                 0,  0   }
+        {"help",         no_argument,       0,  'h' },
+        {"version",      no_argument,       0,  'V' },
+        {"input",        required_argument, 0,  'i' },
+        {"output",       required_argument, 0,  'o' },
+        {"ibuf-bytes",   required_argument, 0,  'I' },
+        {"obuf-bytes",   required_argument, 0,  'O' },
+        {0,              0,                 0,  0   }
     };
 
     int long_index = 0;
 
     // evaluacion de los parametros enviados al programa
-    while ((opt = getopt_long(argc, argv,"hVui:o:", 
+    while ((opt = getopt_long(argc, argv,"hVui:o:I:O:", 
                    long_options, &long_index )) != -1) {
         switch (opt) {
             case 'h' :
@@ -176,6 +156,12 @@ int main(int argc, char *argv[]) {
             case 'o' :
                 output = 0;
                 output_filename = optarg;
+                break;
+            case 'I':
+                ibuf = atoi(optarg);
+                break;
+            case 'O':
+                obuf = atoi(optarg);
                 break;
             case '?':
             	exit(1);
@@ -218,21 +204,20 @@ int main(int argc, char *argv[]) {
 
     /* ejecucion del programa */
 
-    WordArray word;
+    printf("Ibuf: %i\n", ibuf);
+    printf("Obuf: %i\n", obuf);
+    
+    /*WordArray word;
     init_array(&word,N);
     int i = read_word(input_file, &word);
     while (i == 1){
         if (es_capicua(&word)){
-        	int e = fprintf(output_file,"%s\n", word.array);
-            if (e < 0){
-                fprintf(stderr, "Error writing at file\n");
-                exit(1);
-            }
+        	fprintf(output_file,"%s\n", word.array);
         }
         clear_array(&word);
         i = read_word(input_file, &word);
     }
-    free_array(&word);
+    free_array(&word);*/
 
     // cierro los archivos
     
