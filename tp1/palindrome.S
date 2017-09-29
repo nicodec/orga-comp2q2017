@@ -23,35 +23,34 @@ palindrome:
 	sw	$fp, 40(sp)
 	sw	gp, 36(sp)
 
-    sw  a0, 0(sp)
-    sw  a1, 4(sp)
-    sw  a2, 8(sp)
-    sw  a3, 12(sp)
+    sw  a0, 0(sp)       #file_in
+    sw  a1, 4(sp)       #ibuf
+    sw  a2, 8(sp)       #file_out
+    sw  a3, 12(sp)      #obuf
 
     move	$fp, sp
 
 prog:
-    li	v0, SYS_read # ver dentro de <sys/syscall.h>.
-	li	a0, 0        # a0: file descriptor number.
-	la	a1, 28(sp)   # a1: data pointer.
-	li	a2, 1        # a2: available space.
+    li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
+	lw	a0, 0(sp)       # a0: file descriptor number.
+	la	a1, 28(sp)      # a1: data pointer.
+	lw	a2, 4(sp)          # a2: available space.
 	syscall
     
-    li	v0, SYS_write # ver dentro de <sys/syscall.h>.
-	lw  a0, 8(sp)         # a0: file descriptor number.
-	la	a1, 28(sp)    # a1: output data pointer.
-	li	a2, 1         # a2: output byte size.
+    li	v0, SYS_write   # ver dentro de <sys/syscall.h>.
+	lw  a0, 8(sp)       # a0: file descriptor number.
+	la	a1, 28(sp)      # a1: output data pointer.
+	lw	a2, 12(sp)          # a2: output byte size.
 	syscall
 
-    li  t0, 10
-    sw  t0, 52(sp)
+    li  t0, 10          #guardo salto de linea en t0
+    sw  t0, 52(sp)      #guardo el salto de linea en el stack
     
-    li	v0, SYS_write # ver dentro de <sys/syscall.h>.
-	lw  a0, 8(sp)     # a0: file descriptor number.
-	la	a1, 52(sp)    # a1: output data pointer.
-	li	a2, 1         # a2: output byte size.
+    li	v0, SYS_write   # ver dentro de <sys/syscall.h>.
+	lw  a0, 8(sp)       # a0: file descriptor number.
+	la	a1, 52(sp)      # a1: output data pointer.
+	li	a2, 1           # a2: output byte size.
 	syscall
-
 
     
 
