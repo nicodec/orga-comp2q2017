@@ -5,25 +5,63 @@
 #include <sys/syscall.h>
 #include <mips/regdef.h>
 
-    .text
+	.text
 	.align	2
-    .abicalls
+
 	.globl	palindrome
 	.ent	palindrome
 palindrome:
-    .frame $fp, 40, ra # ver el 40
-    .set noreorder
-    .cpload tq
-    .set reorder
-    subu sp, sp, 40 # ver 40 creo stack
-    sw	ra, 40(sp) #guardo el ra en stack
-	sw	$fp, 36(sp)	#guardo el fp en stack
-    sw	gp, 32(sp) #guardo el gp en stack
-    sw	a0, 0(sp) #guardo el 1er parametro N en el stack  en stack
-	sw	a1, 4(sp) #guardo el 2do parametro N en el stack  en stack
-	sw	a2, 8(sp) #guardo el 3er parametro N en el stack  en stack
-	sw	a3, 12(sp) #guardo el 4to parametro N en el stack  en stack
+	.frame $fp, 48, ra
+	.set	noreorder
+	.cpload	t9
+	.set	reorder
+
+    subu	sp, sp, 48
     
+	.cprestore 32
+	sw	ra, 44(sp)
+	sw	$fp, 40(sp)
+	sw	gp, 36(sp)
+
+    sw  a0, 0(sp)
+    sw  a1, 4(sp)
+    sw  a2, 8(sp)
+    sw  a3, 12(sp)
+
+    move	$fp, sp
+
+prog:
+    li	v0, SYS_read # ver dentro de <sys/syscall.h>.
+	li	a0, 0        # a0: file descriptor number.
+	la	a1, 28(sp)   # a1: data pointer.
+	li	a2, 1        # a2: available space.
+	syscall
     
+    li	v0, SYS_write # ver dentro de <sys/syscall.h>.
+	lw  a0, 8(sp)         # a0: file descriptor number.
+	la	a1, 28(sp)    # a1: output data pointer.
+	li	a2, 1         # a2: output byte size.
+	syscall
+
+    li  t0, 10
+    sw  t0, 52(sp)
+    
+    li	v0, SYS_write # ver dentro de <sys/syscall.h>.
+	lw  a0, 8(sp)     # a0: file descriptor number.
+	la	a1, 52(sp)    # a1: output data pointer.
+	li	a2, 1         # a2: output byte size.
+	syscall
+
+
+    
+
+palindrome_return:
+    move    v0, t0
+	move	sp, $fp
+	lw	    ra, 44(sp)
+	lw	    $fp, 40(sp)
+	addu	sp, sp, 48
+	j	    ra
+	.end	palindrome
     
     

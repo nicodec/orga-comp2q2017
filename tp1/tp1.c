@@ -205,12 +205,17 @@ int main(int argc, char *argv[]) {
     }
 
     /* ejecucion del programa */
-
-    printf("Ibuf: %i\n", ibuf);
-    printf("Obuf: %i\n", obuf);
-
     char *msg = "Estoy probando mips!!!\n";
 	write(1, msg, mystrlen(msg));
+
+    int file_in = fileno(input_file);
+    int file_out = fileno(output_file);
+    
+    int a = palindrome(file_in,ibuf,file_out,obuf);
+    printf("file_in: %i\nibuf: %zu\nfile_out: %i\nobuf: %zu\n",
+            file_in,ibuf,file_out,obuf);
+    printf("a: %i\n",a);
+    //write(1,a,sizeof(int));   
     
     /*WordArray word;
     init_array(&word,N);
