@@ -44,7 +44,39 @@ prog:
 	la	a1, 24(sp)      # a1: data pointer.
 	lw	a2, 4(sp)          # a2: available space.
 	syscall
+
+
+	lw	t0, zero		# indice para recorrer el buffer (i)
+	lw	t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
+	lb	t2, t1			# cargo el primer valor del buffer de entrada en t2
+
+buffer_word_read:
+	beq		t0, 4(sp), prog 
+	move	t8, t0		# guardo el indice del inicio de la palabra en t8
+	slti	t3, t2, 48
+	beqz	t3, palindrome_check
+	slti	t3, t2, 58
+	slti 	t4, t2, 65
+	slt		t3, t3, t4
+	bnez	t3, palindrome_check
+	slti	t3, t2, 91
+	slti	t4, t2, 97
+	slt 	t3, t3, t4
+	bnez	t3, palindrome_check
+	slti	t3, t2, 123
+	beqz	t3, palindrome_check
+
+	move	t9, t0		# guardo el indice del final de la palabra en t9
+	addi	t0, t0, 1	# i = i + 1
+	lb 		t2, t0(t1)
+	j 		buffer_word_read	# sigo leyendo letras hasta econtrar un caracter que no sea alfanumerico
+
+
+palindrome_check:
+	addi	t0, t0, 1	# i = i + 1
+
     
+buffer_write:
     li	v0, SYS_write   # ver dentro de <sys/syscall.h>.
 	lw  a0, 8(sp)       # a0: file descriptor number.
 	la	a1, 28(sp)      # a1: output data pointer.
