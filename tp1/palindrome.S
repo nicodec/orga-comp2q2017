@@ -31,11 +31,11 @@ palindrome:
     move	$fp, sp
 
     lw	a0, 4(sp)		# cargo el parametro para mymalloc
-    jal	ra, mymalloc	# llamo a la funcion
+    jal	mymalloc	# llamo a la funcion
     sw 	v0, 24(sp)		# guardo la direccion de memoria reservada para el buffer de ENTRADA
 
     lw	a0, 12(sp)		# cargo el parametro para mymalloc
-    jal ra, mymalloc	# llamo a la funcion
+    jal mymalloc	# llamo a la funcion
     sw 	v0, 28(sp)		# guardo la direccion de memoria reservada para el buffer de SALIDA
 
 prog:
@@ -45,13 +45,13 @@ prog:
 	lw	a2, 4(sp)          # a2: available space.
 	syscall
 
-
-	lw	t0, zero		# indice para recorrer el buffer (i)
+	move 	t0, zero		# indice para recorrer el buffer (i)
 	lw	t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
-	lb	t2, t1			# cargo el primer valor del buffer de entrada en t2
+	lb	t2, 0(t1)			# cargo el primer valor del buffer de entrada en t2
+	lw	t7, 4(sp)
 
 buffer_word_read:
-	beq		t0, 4(sp), prog 
+	beq		t0, t7, prog 
 	move	t8, t0		# guardo el indice del inicio de la palabra en t8
 	slti	t3, t2, 48
 	beqz	t3, palindrome_check
@@ -67,13 +67,14 @@ buffer_word_read:
 	beqz	t3, palindrome_check
 
 	move	t9, t0		# guardo el indice del final de la palabra en t9
-	addi	t0, t0, 1	# i = i + 1
-	lb 		t2, t0(t1)
+	add		t0, t0, 1	# i = i + 1
+	add 	t1, t1, 1
+	lb 		t2, 0(t1)
 	j 		buffer_word_read	# sigo leyendo letras hasta econtrar un caracter que no sea alfanumerico
 
 
 palindrome_check:
-	addi	t0, t0, 1	# i = i + 1
+	add 	t0, t0, 1	# i = i + 1
 
     
 buffer_write:
@@ -95,10 +96,10 @@ buffer_write:
     
 free_buffer:
 	lw	a0, 24(sp)
-	jal ra, myfree		# libero la memoria reservada para el buffer de entrada
+	jal myfree		# libero la memoria reservada para el buffer de entrada
 
 	lw	a0, 28(sp)
-	jal	ra, myfree		# libero la memoria reservada para el buffer de salida
+	jal	myfree		# libero la memoria reservada para el buffer de salida
 
 palindrome_return:
     move    v0, t0
