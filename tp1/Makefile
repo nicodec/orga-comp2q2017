@@ -4,7 +4,7 @@ CFLAGS = -g -Wall
 all: $(PROGS)
 	:
 
-tp1: tp1.c palindrome.S mystrlen.S
+tp1: tp1.c palindrome.S mystrlen.S mymalloc.S
 	$(CC) $(CFLAGS) -o $@ $>
 
 clean:
