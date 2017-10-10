@@ -30,10 +30,18 @@ palindrome:
 
     move	$fp, sp
 
+    lw	a0, 4(sp)		# cargo el parametro para mymalloc
+    jal	ra, mymalloc	# llamo a la funcion
+    sw 	v0, 24(sp)		# guardo la direccion de memoria reservada para el buffer de ENTRADA
+
+    lw	a0, 12(sp)		# cargo el parametro para mymalloc
+    jal ra, mymalloc	# llamo a la funcion
+    sw 	v0, 28(sp)		# guardo la direccion de memoria reservada para el buffer de SALIDA
+
 prog:
     li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
 	lw	a0, 0(sp)       # a0: file descriptor number.
-	la	a1, 28(sp)      # a1: data pointer.
+	la	a1, 24(sp)      # a1: data pointer.
 	lw	a2, 4(sp)          # a2: available space.
 	syscall
     
@@ -53,6 +61,12 @@ prog:
 	syscall
 
     
+free_buffer:
+	lw	a0, 24(sp)
+	jal ra, myfree		# libero la memoria reservada para el buffer de entrada
+
+	lw	a0, 28(sp)
+	jal	ra, myfree		# libero la memoria reservada para el buffer de salida
 
 palindrome_return:
     move    v0, t0
