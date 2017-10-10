@@ -1,0 +1,217 @@
+\documentclass[11pt,a4paper]{article}
+
+%Paquetes importados
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{listings}
+\usepackage[rgb,svgnames,table]{xcolor}
+\usepackage{pdfpages}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{afterpage}
+
+\addto\captionsspanish{
+	\renewcommand\tablename{Tabla}
+	\renewcommand\listtablename{Lista de tablas}
+	\renewcommand\lstlistingname{Código}
+	\renewcommand\lstlistlistingname{Lista de código}
+}
+
+\lstset{ % Defino el formato de bloques de código fuente
+	inputencoding=utf8, % Indico la codificación de los archivos de entrada
+	extendedchars=true, % Extiendo los caracteres
+	% Escapeo caracteres especiales
+	literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1,
+	showtabs=false, % Indica si se muestran los tabs
+	tabsize=2, % Indica la cantidad de espacios que ocupa un tab
+	showspaces=false, % Indica si muestra los espacios
+	showstringspaces=false, % Indica si muestra los espacios dentro de strings
+	numbers=left, % Posición en que se muestran los números de línea
+	numberstyle=\tiny\color{gray}, % Estilo de los números de línea
+	breaklines=true, % Se parten las líneas que exceden del ancho del documento
+	frame=single, % Formato del marco del entorno
+	backgroundcolor=\color{gray!5}, % Color de fondo
+	basicstyle=\ttfamily\footnotesize, % Estilo de base (familia, tamaño, color)
+	keywordstyle=\color{DarkBlue}, % Estilo de las palabras reservadas
+	stringstyle=\color{red}, % Estilo de los strings
+	commentstyle=\color{DarkGreen}, % Estilo de los comentarios
+	language=Octave, % Espeficica el lenguaje a usar
+	otherkeywords={std,cout} % Agrego palabras reservadas que no se resaltan
+}
+
+\graphicspath{{imagenes/}}
+
+\newcommand\blankpage{%
+	\null
+	\thispagestyle{empty}%
+	\addtocounter{page}{-1}%
+	\newpage}
+
+
+\pagestyle{fancy}
+
+\lhead[]{$2^{do}$ Cuatrimestre 2017\\TP 1}
+\chead[]{}
+\rhead[]{\includegraphics[scale=0.2]{logo_fiuba2}}
+
+\lfoot[]{}
+\cfoot[]{}
+\rfoot[]{\thepage / \pageref{LastPage}}
+
+\begin{document}
+\title{TP1 Organización de Computadoras}
+\author{Federico Rodriguez Longhi}		
+\date{\today}
+
+\begin{titlepage}
+	
+	\begin{figure}[H]
+		\raggedright
+		\includegraphics[scale=0.25]{logo_fiuba2}
+		\hfill
+		\raggedleft
+		\includegraphics[scale=0.2]{logo_uba}
+	\end{figure}
+	\rule{\textwidth}{1pt}\par % Thick horizontal line
+	\vspace{2pt}\vspace{-\baselineskip} % Whitespace between lines
+	\rule{\textwidth}{0.4pt}\par % Thin horizontal line
+	
+	\vspace{0.05\textheight} % Whitespace between the top lines and title
+	\centering % Center all text
+	{\Huge UBA FACULTAD DE INGENIERÍA}\\[0.5\baselineskip]
+	{\Large 66.20 Organización de Computadoras}\\[0.5\baselineskip]
+	{\Huge Trabajo Práctico 1}\\[0.75\baselineskip]
+	{\Large 2$^{do}$ Cuatrimestre 2017}\\[0.5\baselineskip]
+	\vspace{0.2\textheight}
+
+
+	\begin{flushleft}
+	\begin{table}[H]
+		\begin{flushleft}
+		\textbf{Integrantes:}\\
+		\vspace{0.01\textheight}
+		\begin{tabular}{l r}
+			Rodriquez Longhi, Federico  & 93336\\
+			\hspace{0.05\textheight}federico.rlonghi@gmail.com&\\
+			Deciancio, Nicolás Andrés   & 92150\\
+			\hspace{0.05\textheight}nicodec\_89@hotmail.com&\\
+			Marshall, Juan Patricio & 95471\\
+			\hspace{0.05\textheight}juan.pmarshall@gmail.com&\\
+		\end{tabular}
+		\end{flushleft}
+	\end{table}
+		
+
+	\end{flushleft}
+	\vspace{0.05\textheight}
+	\vspace{2pt}
+	\vfill
+	\rule{\textwidth}{1pt}\par % Thick horizontal line
+	\vspace{2pt}\vspace{-\baselineskip} % Whitespace between lines
+	\rule{\textwidth}{0.4pt}\par % Thin horizontal line
+	
+\end{titlepage}
+
+\blankpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introducción}
+
+
+\section{Documentación}
+El uso del programa se compone de las siguientes opciones que le son pasadas por parámetro:
+\begin{itemize}
+	\item \texttt{-h} o \texttt{--help}: muestra la ayuda.
+	\item \texttt{-V} o \texttt{--version}: muestra la versión.
+	\item \texttt{-i} o \texttt{--input}: recibe como parámetro un archivo de texto como entrada. En caso de que no usar esta opción, se toma como entrada la entrada estándar.
+	\item \texttt{-o} o \texttt{--output}: recibe como parámetro un archivo de texto como salida. En caso de que no usar esta opción, se toma como salida la salida estándar.
+	\item \texttt{-I} o \texttt{--ibuf-bytes}: recibe como parámetro el tamaño en bytes del buffer de entrada.
+	\item \texttt{-O} o \texttt{--iobuf-bytes}: recibe como parámetro el tamaño en bytes del buffer de salida.
+	
+\end{itemize}
+
+\section{Compilación}
+Dentro del directorio raiz se encuentra un Makefile. Ejecuntando \texttt{make} se compilara el programa y se generará el ejecutable \texttt{tp1}.
+
+\section{Pruebas}
+Para las pruebas se proveen de dos scripts que las ejecutan.
+El primer script \texttt{test.sh} ejecuta los ejemplos del enunciado.
+
+El segundo script \texttt{test\_p.sh} ejecuta las pruebas propias.
+Este archivo esta diseñado para poder agregar pruebas de forma sencilla, simplemente se debe agregar una linea en el sector de pruebas de la siguiente manera:\\
+
+\texttt{make\_test <nombre> <entrada de texto> <salida esperada>}
+
+Este script crea los archivos correspondientes en la carpeta tests (dentro del directorio sobre el cual se ejecuta).
+Los archivos creados son de la forma:
+
+\begin{itemize}
+	\item \texttt{test-<nombre del test>\_in}: archivo de entrada
+	\item \texttt{test-<nombre del test>\_out}: archivo de salida generado por el programa
+	\item \texttt{test-<nombre del test>\_expected}: archivo de salida esperado
+\end{itemize}
+
+\subsection{Corridas de Prueba}
+A continuación se muestran las corridas de prueba generadas por el script:
+
+\begin{lstlisting}
+
+Compiling Source
+Compilation Success
+Starting Tests
+
+Test: one_letter_a
+Test passed
+
+Test: empty_file
+Test passed
+
+Test: no_palindroms
+Test passed
+
+Test: todos_palindromos
+Test passed
+
+Test: varias_lineas
+Test passed
+
+Test: all_letters
+Test passed
+
+Test: case_sensitive
+Test passed
+
+Test: numbers_and_letters
+Test passed
+
+Test: text_with_dash
+Test passed
+
+--------------------
+All 9 tests passed!!!
+--------------------
+\end{lstlisting}
+
+\section{Conclusión}
+
+
+
+\section{Código en C}
+
+\lstinputlisting[language=C]{code/tp1.c}
+
+\section{Función Palindromo en MIPS}
+\lstinputlisting[language=C]{code/palindrome.S}
+
+\section{Enunciado}
+El enunciado se encuentra anexado al final de este documento.
+
+\end{document}
+
