@@ -1,0 +1,28 @@
+
+#en a0 tengo len
+#en a1 tengo la palabra
+
+esPalindromo:
+	
+	slti	$t0, $a0, 2         # me fijo que la palabra tenga mas de una letra
+	bne	    $t0, $zero, esTrue
+        
+	lb  	$t0, 0($a1)         # cargo en t0 el primer byte (primera letra)
+	addi	$t1, $a0, -1        # en t1 len-1
+	add	    $t1, $t1, $a1       # en t1 len-1 + a1
+	lb  	$t1, 0($t1)         # en t1 ultimo byte (ultima letra)
+	bne	    $t0, $t1, esFalse   # si no son iguales no es palindromo
+
+
+    #sino actualizo los indices
+	addi	$a0, $a0, -2    # a len le resto 2 (ya iguale dos letras)
+	addi	$a1, $a1, 1     # muevo el puntero de a1 a la siguiente letra
+	j	esPalindromo        # vuelvo a controlar si es palindromo
+
+esTrue:
+    cargo el buffer de salida con $a1
+    con $a0 como tamanio
+    usar $a0 para ver si me paso del tamanio del buffer
+
+esFalse:
+    vuelvo a leer otra palabra del buffer de entrada

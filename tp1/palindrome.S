@@ -66,6 +66,10 @@ buffer_word_read:
 	bnez	t3, palindrome_check
 	slti	t3, t2, 123
 	beqz	t3, palindrome_check
+    li      t3, 95
+    beq     t2, t3, palindrome_check
+    li      t3, 45
+    beq     t2, t3, palindrome_check
 
 	move	t9, t0		# guardo el indice del final de la palabra en t9
 	add		t0, t0, 1	# i = i + 1
@@ -94,13 +98,13 @@ buffer_write:
 	li	a2, 1           # a2: output byte size.
 	syscall
 
-    
 free_buffer:
 	la	a0, 24(sp)
 	jal myfree		# libero la memoria reservada para el buffer de entrada
 
 	la	a0, 28(sp)
 	jal	myfree		# libero la memoria reservada para el buffer de salida
+
 
 palindrome_return:
     move    v0, t0
