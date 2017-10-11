@@ -54,7 +54,7 @@ prog:
 	la	t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
 	lb	t2, 0(t1)			# cargo el primer valor del buffer de entrada en t2
 	lw	t7, 4(sp)
-	lw	t8, 20(sp)		# guardo la direccion del buffer para palabra
+	la	t8, 20(sp)		# guardo la direccion del buffer para palabra
 	beqz 	t2, buffer_write
 
 buffer_word_read:
@@ -63,7 +63,7 @@ buffer_word_read:
 	sne 	t4, t2, 45
 	add 	t3, t4, t3
 	beq 	t3, 2, palindrome_check
-	slti	t3, t2, 58
+	sgt 	t3, t2, 57
 	slti 	t4, t2, 65
 	add		t3, t3, t4
 	beq 	t3, 2, palindrome_check
@@ -94,21 +94,23 @@ palindrome_check:
 	add 	t1, t1, 1
 	lb 		t2, 0(t1)
 	slti	t3, t9, 2		# me fijo que la palabra tenga mas de una letra
-	beqz	t3, palindromo_fail
-	move	t5, t9			# guardo el indice de la ultima letra para operar (last = len - 1)
+	bnez	t3, palindromo_fail
+	sub 	t5, t9, 1		# guardo el indice de la ultima letra para operar (last = len - 1)
+	move	a0, t9
 	move	t6, zero		# inicio un indice para la primer letra (first = 0)
 
 esPalindromo:
 	lb  	t3, 0(t8)		# cargo en t3 el primer byte (primera letra)
-	sub	    t4, t5, t8		# en t4 last + a1
+	add	    t4, t5, t8		# en t4 last + a1
 	lb  	t4, 0(t4)		# en t4 ultimo byte (ultima letra)
 	bne	    t3, t4, palindromo_fail   # si no son iguales no es palindromo
 
     #sino actualizo los indices
-	sub 	t5, t5, 1		# a last le resto 1 (ya iguale dos letras)
+	sub 	t5, t5, 2		# a last le resto 2 (ya iguale dos letras)
+	sub 	a0, a0, 1
 	add 	t6, t6, 1		# a first le sumo 1
 	add		t8, t8, 1		# muevo el puntero de t8 a la siguiente letra
-	blt		t5, t6, esTrue
+	blt		a0, t6, esTrue
 	j	esPalindromo        # vuelvo a controlar si es palindromo
 
 palindromo_fail:
