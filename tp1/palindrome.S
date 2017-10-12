@@ -49,6 +49,8 @@ prog:
 	lw	a2, 4(sp)          # a2: available space.
 	syscall
 
+    bne	a3, zero, read_error    #verifico error
+
 	add 	t0, zero, zero		# indice para recorrer el buffer (i)
 	move 	t9, zero			# indice para ultima letra de palabra
 	la	t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
@@ -145,6 +147,11 @@ buffer_write:
 # 	la	a0, 28(sp)
 # 	jal	myfree		# libero la memoria reservada para el buffer de salida
 
+write_error:
+read_error:
+	li	v0, SYS_exit
+	li	a0, 1
+	syscall
 
 palindrome_return:
     move    v0, t0
