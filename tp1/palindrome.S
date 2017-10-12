@@ -119,7 +119,7 @@ esTrue:
     #cargo la palabra en el buffer de escritura
     #si el buffer se llena lo mando al kernel y sigo escribiendo desde cero
 
-escribirArchivo:
+buffer_write:
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
     la  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
@@ -130,8 +130,8 @@ escribirArchivo:
 
     #una vez que escribe, tengo que vaciar el buffer(poner el indice en 0)
     
-    #aca tengo que volver a leer del buffer de entrada(no leer del archivo de nuevo)
-
+    b buffer_word_read #vuelvo a leer del buffer de entrada
+    
     
 # free_buffer:
 # 	la	a0, 24(sp)
