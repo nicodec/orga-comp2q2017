@@ -85,9 +85,6 @@ buffer_word_read:
 	add 	t1, t1, 1
 	lb 		t2, 0(t1)
 	j 		buffer_word_read	# sigo leyendo letras hasta econtrar un caracter que no sea alfanumerico
-
-#en a0 tengo len
-#en a1 tengo la palabra
 	
 palindrome_check:
 	la 		t8, 20(sp)		#  guardo en t8 la direccion de la palabra
