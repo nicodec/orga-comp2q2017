@@ -42,22 +42,22 @@ palindrome:
     jal mymalloc	# llamo a la funcion
     sw 	v0, 28(sp)		# guardo la direccion de memoria reservada para el buffer de SALIDA
 
+	add 	t9, zero, zero			# indice para ultima letra de palabra
 prog:
     li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
 	lw	a0, 0(sp)       # a0: file descriptor number.
-	la	a1, 24(sp)      # a1: data pointer.
+	lw	a1, 24(sp)      # a1: data pointer.
 	lw	a2, 4(sp)          # a2: available space.
 	syscall
 
     bne	a3, zero, read_error    #verifico error de lectura
 
 	add 	t0, zero, zero		# indice para recorrer el buffer (i)
-	move 	t9, zero			# indice para ultima letra de palabra
-	la	t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
-	lb	t2, 0(t1)			# cargo el primer valor del buffer de entrada en t2
-	lw	t7, 4(sp)
-	la	t8, 20(sp)		# guardo la direccion del buffer para palabra
-	beqz 	t2, buffer_write
+	lw		t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
+	lb		t2, 0(t1)			# cargo el primer valor del buffer de entrada en t2
+	move	t7, v0
+	lw		t8, 20(sp)		# guardo la direccion del buffer para palabra
+	beqz 	t7, buffer_write
 
 buffer_word_read:
 	beq		t0, t7, prog 
@@ -82,12 +82,14 @@ buffer_word_read:
 	add		t0, t0, 1		# i = i + 1
 	sb 		t2, 0(t8)		# guardo la letra en el buffer de palabra
 	add 	t8, t8, 1		# paso a la siguiente posicion de memoria para letra de palabra
-	add 	t1, t1, 1
+	bgt		t0, t7, prog
+	add 	t1, t1, 1		# paso a la siguiente posicion de memoria para letra de buffer de entrada
 	lb 		t2, 0(t1)
 	j 		buffer_word_read	# sigo leyendo letras hasta econtrar un caracter que no sea alfanumerico
 	
 palindrome_check:
-	la 		t8, 20(sp)		#  guardo en t8 la direccion de la palabra
+# no se pueden usar los siguientes registros: t0, t1, t2, t7, t9
+	lw 		t8, 20(sp)		#  guardo en t8 la direccion de la palabra
 	add 	t0, t0, 1		# i = i + 1
 	add 	t1, t1, 1
 	lb 		t2, 0(t1)
@@ -114,12 +116,14 @@ esPalindromo:
 palindromo_fail:
 	move	t9, zero
 	j 		buffer_word_read
-    
+
 esTrue:
+# no se pueden usar los siguientes registros: t0, t1, t2, t7, t9
     #cargo la palabra en el buffer de escritura
     #si el buffer se llena lo mando al kernel y sigo escribiendo desde cero
 
 buffer_write:
+#escribirArchivo:
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
     la  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
@@ -133,12 +137,16 @@ buffer_write:
     b buffer_word_read #vuelvo a leer del buffer de entrada
     
     
-# free_buffer:
-# 	la	a0, 24(sp)
-# 	jal myfree		# libero la memoria reservada para el buffer de entrada
+free_buffer:
 
-# 	la	a0, 28(sp)
-# 	jal	myfree		# libero la memoria reservada para el buffer de salida
+	lw	a0, 20(sp)
+	jal myfree		# libero la memoria reservada para el buffer de palabra
+
+	lw	a0, 24(sp)
+	jal myfree		# libero la memoria reservada para el buffer de entrada
+
+	lw	a0, 28(sp)
+	jal	myfree		# libero la memoria reservada para el buffer de salida
 
 #Si hay IO error tengo que salir
 write_error:
