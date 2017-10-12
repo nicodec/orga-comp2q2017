@@ -11,12 +11,12 @@
 	.globl	palindrome
 	.ent	palindrome
 palindrome:
-	.frame $fp, 52, ra
+	.frame $fp, 60, ra
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
 
-    subu	sp, sp, 52
+    subu	sp, sp, 60
     
 	.cprestore 32
 	sw	ra, 44(sp)
@@ -42,6 +42,8 @@ palindrome:
     jal mymalloc	# llamo a la funcion
     sw 	v0, 28(sp)		# guardo la direccion de memoria reservada para el buffer de SALIDA
 
+    sw 	zero, 52(sp) 	# bytes escritos en buffer de salida
+
 	add 	t9, zero, zero			# indice para ultima letra de palabra
 prog:
 	sw 	t9, 48(sp)
@@ -58,11 +60,13 @@ prog:
 	add 	t0, zero, zero		# indice para recorrer el buffer (i)
 	lw		t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
 	lb		t2, 0(t1)			# cargo el primer valor del buffer de entrada en t2
+	sw 		v0, 56(sp)			# guardo la cantidad de bytes leidos en 56(sp)
 	move	t7, v0
 	lw		t8, 20(sp)		# guardo la direccion del buffer para palabra
 	beqz 	t7, buffer_write
 
 buffer_word_read:
+	lw 		t7, 56(sp)
 	beq		t0, t7, prog 
 	slti	t3, t2, 48
 	sne 	t4, t2, 45
@@ -121,14 +125,29 @@ palindromo_fail:
 	j 		buffer_word_read
 
 buffer_word_write:
-# no se pueden usar los siguientes registros: t0, t1, t2, t7, t9
+# no se pueden usar los siguientes registros: t0, t1, t9
+	lw		t2, 52(sp) 		# recupero la ultima posicion escrita del buffer de salida
+	lw 		t3, 12(sp)		# recupero tamaño del buffer de salida
+	bgt 	t2, t3, buffer_write		#si ya llene el buffer de salida lo mando a escribir en el kernel
+	sub 	t4, t2, 1
+	lw 		t5, 28(sp)		# recupero la direccion del buffer de salida
+	add 	t5, t5, t4 		# avanzo el buffer hasta la ultima posicion escrita
+	lw 		t8, 20(sp) 		# recupero el inicio del buffer de palabra
+	move 	t7, zero
 
+loop_buffer_write:
+
+	bgt 	t2, t3, buffer_write		#si ya llene el buffer de salida lo mando a escribir en el kernel
+
+	add 	t2, t2, t1
+	add 	t5, t5, 1
+
+	# me fijo 
     #cargo la palabra en el buffer de escritura
     #si el buffer se llena lo mando al kernel y sigo escribiendo desde cero
 
 buffer_write:
 
-escribirArchivo:
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
     la  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
@@ -165,7 +184,7 @@ palindrome_return:
 	move	sp, $fp
 	lw	    ra, 44(sp)
 	lw	    $fp, 40(sp)
-	addu	sp, sp, 52
+	addu	sp, sp, 60
 	j	    ra
 	.end	palindrome
     
