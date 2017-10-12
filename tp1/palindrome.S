@@ -49,7 +49,7 @@ prog:
 	lw	a2, 4(sp)          # a2: available space.
 	syscall
 
-    bne	a3, zero, read_error    #verifico error
+    bne	a3, zero, read_error    #verifico error de lectura
 
 	add 	t0, zero, zero		# indice para recorrer el buffer (i)
 	move 	t9, zero			# indice para ultima letra de palabra
@@ -88,7 +88,6 @@ buffer_word_read:
 
 #en a0 tengo len
 #en a1 tengo la palabra
-
 	
 palindrome_check:
 	la 		t8, 20(sp)		#  guardo en t8 la direccion de la palabra
@@ -118,26 +117,23 @@ esPalindromo:
 palindromo_fail:
 	move	t9, zero
 	j 		buffer_word_read
-
+    
 esTrue:
     #cargo la palabra en el buffer de escritura
     #si el buffer se llena lo mando al kernel y sigo escribiendo desde cero
 
-buffer_write:
-    li	v0, SYS_write   # ver dentro de <sys/syscall.h>.
-	lw  a0, 8(sp)       # a0: file descriptor number.
-	la	a1, 28(sp)      # a1: output data pointer.
-	lw	a2, 12(sp)          # a2: output byte size.
-	syscall
+escribirArchivo:
+    li  v0, SYS_write
+    lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
+    la  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
+    lw  a2, 12(sp)      #cargo en a2 el tamaño del buffer (ojo! puede ser mas chico)
+    #TODO
 
-    li  t0, 10          #guardo salto de linea en t0
-    sw  t0, 52(sp)      #guardo el salto de linea en el stack
+    bne	a3, zero, write_error    #verifico error de escritura
+
+    #una vez que escribe, tengo que vaciar el buffer(poner el indice en 0)
     
-    li	v0, SYS_write   # ver dentro de <sys/syscall.h>.
-	lw  a0, 8(sp)       # a0: file descriptor number.
-	la	a1, 52(sp)      # a1: output data pointer.
-	li	a2, 1           # a2: output byte size.
-	syscall
+    #aca tengo que volver a leer del buffer de entrada(no leer del archivo de nuevo)
 
     
 # free_buffer:
@@ -147,6 +143,7 @@ buffer_write:
 # 	la	a0, 28(sp)
 # 	jal	myfree		# libero la memoria reservada para el buffer de salida
 
+#Si hay IO error tengo que salir
 write_error:
 read_error:
 	li	v0, SYS_exit
