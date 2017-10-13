@@ -9,55 +9,12 @@
 extern size_t mystrlen(const char*);
 extern int palindrome(int, size_t, int, size_t);
 
-/*int N = 100;
-
-typedef struct {
-  char *array;
-  size_t used;
-  size_t size;
-  size_t initial_size;
-} WordArray;
-
-void init_array(WordArray *a, size_t initial_size){
-    a->array = (char*)malloc(sizeof(char*)*initial_size);
-    a->used = 0;
-    a->size = initial_size;
-    a->initial_size = initial_size;
-    a->array[0] = '\0';
-}
-
-void clear_array(WordArray *a){
-    free(a->array);
-    a->array = (char*)malloc(sizeof(char*)*a->initial_size);
-    a->used = 0;
-    a->size = a->initial_size;
-    a->array[0] = '\0';
-}
-
-void insert_char(WordArray *a, char c){
-    if (a->used == a->size){
-        size_t new_size = a->size*2;
-        a->array = (char*)realloc(a->array, sizeof(char*)*new_size);
-        a->size = new_size;
-    }
-    a->array[a->used]=c;
-    a->array[a->used+1]='\0';
-    a->used++;
-}
-
-void free_array(WordArray *a){
-    free(a->array);
-    a->array = NULL;
-    a->size = a->used = 0;
-}*/
-
 /* imprimir el uso de tp0 */
 void print_usage() {
     printf("Usage: tp0 -i [input_file] -o [output_file]\n");
 }
 
 /* imprimir la pagina de ayuda */
-
 void print_help() {
     printf("\tUsage:\n"
     	"\t\ttp0 -h\n"
@@ -78,41 +35,6 @@ void print_help() {
 void print_version(){
     printf("tp1 1.0\n");
 }
-
-/* funcion para determinar si una palabra es capicua o no */
-/*int es_capicua(WordArray *word){
-
-    size_t len = word->used;
-    if (len == 0) return 0;
-
-    int capicua = 1;
-    int i=0;
-    while (capicua && i < (len / 2)){
-        if (tolower(word->array[i]) != tolower(word->array[len - i - 1])){
-            return 0;
-        }
-        i++;
-    }
-    return 1;
-}*/
-
-/* Lee la palabra de un archivo y la devuelve en word */
-/*int read_word (FILE *f, WordArray *word) {
-    int c = fgetc(f);
-    if (c == EOF) return 0;
-    while (1){
-        if ( (65 <= c && c <= 90) || //letras mayusculas
-             (97 <= c && c <= 122) || //letras minusculas
-             (48 <= c && c <= 57) || //numeros
-             c == 95 || c == 45){ //barras
-            insert_char(word,c);
-        }else{
-            return 1;
-        }
-        c = fgetc(f);
-    }
-    return 0;
-}*/
 
 int main(int argc, char *argv[]) {
 
@@ -210,26 +132,16 @@ int main(int argc, char *argv[]) {
 
     int file_in = fileno(input_file);
     int file_out = fileno(output_file);
-    
-    int a = palindrome(file_in,ibuf,file_out,obuf);
+
     printf("file_in: %i\nibuf: %zu\nfile_out: %i\nobuf: %zu\n",
             file_in,ibuf,file_out,obuf);
-    printf("a: %i\n",a);
-    //write(1,a,sizeof(int));   
-    
-    /*WordArray word;
-    init_array(&word,N);
-    int i = read_word(input_file, &word);
-    while (i == 1){
-        if (es_capicua(&word)){
-        	fprintf(output_file,"%s\n", word.array);
-        }
-        clear_array(&word);
-        i = read_word(input_file, &word);
-    }
-    free_array(&word);*/
 
-    // cierro los archivos
+    
+    int a = palindrome(file_in,ibuf,file_out,obuf);
+
+
+    printf("a: %i\n",a);
+    
     
     if (input == 0){
         fclose(input_file);

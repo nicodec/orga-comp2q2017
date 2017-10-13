@@ -241,13 +241,29 @@ Para realizar este análisis utilizamos un archivo de texto como entrada de un t
 \section{Conclusión}
 
 
+\appendix
+
+\section*{Apéndice}
 
 \section{Código en C}
+El siguiente código corresponde al cuerpo principal del programa. Se encarga de procesar los parámetros, abrir los archivos, llamar a la función palíndromo (escrita en MIPS) y luego cerrar los archivos correspondientes.
 
 \lstinputlisting[language=C]{code/tp1.c}
 
-\section{Función Palindromo en MIPS}
-\lstinputlisting[language=C]{code/palindrome.S}
+\section{Función Palíndromo en MIPS}
+Esta función escrita en MIPS es la que corresponde a la pedida en el enunciado, en ella se llama a mymalloc y a testpal (descripta en la próxima sección).
+
+\lstinputlisting[language=C]{code/palindromo3.S}
+
+\section{Función testpal}
+Hemos desarrollado una función testpal.S la cual recibe en a0 la dirección de la palabra a evaluar, en a1 la longitud de la palabra y devuelve en v0: 0 si la palabra es palíndromo o 1 si no lo es.
+
+\lstinputlisting[language=C]{code/testpal.S}
+
+\section{Función testpal en C}
+La siguiente función es el equivalente en C de testpal.S
+
+\lstinputlisting[language=C]{code/testpal.c}
 
 \section{Enunciado}
 El enunciado se encuentra anexado al final de este documento.

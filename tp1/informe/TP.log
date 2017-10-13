@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.20)  13 OCT 2017 02:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.20)  13 OCT 2017 11:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -774,7 +774,7 @@ File: utf8.def 2015/12/03 v1.1r UTF-8 support for inputenc
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
 
 <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 23.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 17.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -786,7 +786,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [4]
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
  <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 74.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 69.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -798,7 +798,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [5]
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
  <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 128.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 121.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -807,10 +807,13 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[6]
+[6]) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2015/12/03 v1.1r UTF-8 support for inputenc
+)
+(./code/palindromo3.S
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
  <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 181.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 9.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -822,7 +825,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [7]
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
  <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 232.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 57.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -831,13 +834,10 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[8]) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
-File: utf8.def 2015/12/03 v1.1r UTF-8 support for inputenc
-)
-(./code/palindrome.S
+[8]
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
  <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 37.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 106.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -849,7 +849,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [9]
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
  <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 83.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 156.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -858,11 +858,51 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[10]) 
+[10]
+File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
+ <use imagenes/logo_fiuba2.jpg>
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 200.
+(pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 29.95222pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[11]) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2015/12/03 v1.1r UTF-8 support for inputenc
+) (./code/testpal.S
+File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
+<use imagenes/logo_fiuba2.jpg>
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 29.
+(pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 29.95222pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[12]
+File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
+ <use imagenes/logo_fiuba2.jpg>
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 82.
+(pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 29.95222pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[13]) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2015/12/03 v1.1r UTF-8 support for inputenc
+) (./code/testpal.c) 
 AED: lastpage setting LastPage
 File: imagenes/logo_fiuba2.jpg Graphic file (type jpg)
 <use imagenes/logo_fiuba2.jpg>
-Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 256.
+Package pdftex.def Info: imagenes/logo_fiuba2.jpg used on input line 271.
 (pdftex.def)             Requested size: 77.39978pt x 25.8722pt.
 
 
@@ -871,18 +911,18 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[11] (./TP.aux
+[14] (./TP.aux
 LaTeX Info: Redefining \. on input line 6.
 LaTeX Info: Redefining \% on input line 6.
 ) ) 
 Here is how much of TeX's memory you used:
- 7970 strings out of 493029
- 103139 string characters out of 6136234
- 405494 words of memory out of 5000000
- 11342 multiletter control sequences out of 15000+600000
+ 8170 strings out of 493029
+ 105484 string characters out of 6136234
+ 418494 words of memory out of 5000000
+ 11533 multiletter control sequences out of 15000+600000
  14931 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,17n,52p,245b,2389s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,17n,52p,245b,2349s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/tex
@@ -893,10 +933,10 @@ t/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts
 public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmtt9.pfb>
-Output written on TP.pdf (13 pages, 362088 bytes).
+Output written on TP.pdf (16 pages, 372694 bytes).
 PDF statistics:
- 91 PDF objects out of 1000 (max. 8388607)
- 62 compressed objects within 1 object stream
+ 100 PDF objects out of 1000 (max. 8388607)
+ 68 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
