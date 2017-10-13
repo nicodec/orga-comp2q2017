@@ -130,14 +130,15 @@ leoByte:
     b leoByte # vuelvo a leer un byte
 
 test_palindromo:
-	#me fijo si buffer_word es palindromo
-	#si es palindromo => esPalindromoTrue
-	#sino => leoByte
 
+    #me fijo si buffer_word es palindromo
+    
     lw  a0, 20(sp)      # cargo en a0 la direccion de la palabra
     lw  a1, 16(sp)      # cargo en a1 len palabra
     jal testpal
+
     bnez v0, leoByte # si no es palindromo no hago nada y vuelvo a intentar leer un byte
+
     # si v0 = 0 entonces sigo adelantes
 	
 esPalindromoTrue:
@@ -156,7 +157,7 @@ esPalindromoTrue:
     addu    t1, t1, t3 # en t1 posicion para el proximo caracter (t1 = j)
 
 llenarBufferSalida:
-    add     t0, t0, t4 
+    add     t0, t0, t4
     lb      t5, 0(t0)      # t5 = PALABRA[i]
     sb      t5, 0(t1)      # SALIDA[j] = PALABRA[i]
     lw      t6, 12(sp)     # t6 tamaño maximo buffer SALIDA
@@ -171,9 +172,9 @@ llenarBufferSalida:
     blt t4, t2, llenarBufferSalida
 
     #sino => se termino la palabra -> guardo \n en buffer salida
-    add t7, zero, 10    # guardo en t7 el valor 10 ('\n')
-    add t1, t1, t3      # addr SALIDA + j (SALIDA [j])
-    sb  t7, 0(t1)          # SALIDA[j] = '\n'
+    add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
+    add     t1, t1, t3      # addr SALIDA + j (SALIDA [j])
+    sb      t7, 0(t1)          # SALIDA[j] = '\n'
     addi    t3, t3, 1   # j + 1
     sw      t3, 40(sp)
     
@@ -184,7 +185,7 @@ llenarBufferSalida:
 escribirArchivo:
 	# write buffer_salida -> file_out
     li  v0, SYS_write
-    lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
+    lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida  #lw a0, 8(sp)
     lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
     lw  a2, 40(sp)      #cargo en a2 el tamaño del buffer
     syscall
