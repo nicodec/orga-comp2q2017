@@ -1,16 +1,17 @@
 \select@language {spanish}
 \contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{2}
 \contentsline {section}{\numberline {2}Documentaci\IeC {\'o}n}{2}
-\contentsline {section}{\numberline {3}Compilaci\IeC {\'o}n}{2}
-\contentsline {section}{\numberline {4}Pruebas}{2}
-\contentsline {subsection}{\numberline {4.1}Corridas de Prueba}{3}
-\contentsline {section}{\numberline {5}An\IeC {\'a}lisis}{3}
-\contentsline {section}{\numberline {6}Conclusi\IeC {\'o}n}{4}
-\contentsline {section}{\numberline {A}Stacks de Funciones}{4}
-\contentsline {subsection}{\numberline {A.1}Stack palindromo}{5}
-\contentsline {subsection}{\numberline {A.2}Stack testpal}{5}
-\contentsline {section}{\numberline {B}C\IeC {\'o}digo en C}{6}
-\contentsline {section}{\numberline {C}Funci\IeC {\'o}n Pal\IeC {\'\i }ndromo en MIPS}{9}
-\contentsline {section}{\numberline {D}Funci\IeC {\'o}n testpal}{13}
-\contentsline {section}{\numberline {E}Funci\IeC {\'o}n testpal en C}{15}
-\contentsline {section}{\numberline {F}Enunciado}{15}
+\contentsline {subsection}{\numberline {2.1}Diagrama de Proceso}{3}
+\contentsline {section}{\numberline {3}Compilaci\IeC {\'o}n}{3}
+\contentsline {section}{\numberline {4}Pruebas}{3}
+\contentsline {subsection}{\numberline {4.1}Corridas de Prueba}{4}
+\contentsline {section}{\numberline {5}An\IeC {\'a}lisis}{4}
+\contentsline {section}{\numberline {6}Conclusi\IeC {\'o}n}{5}
+\contentsline {section}{\numberline {A}Stacks de Funciones}{5}
+\contentsline {subsection}{\numberline {A.1}Stack palindromo}{6}
+\contentsline {subsection}{\numberline {A.2}Stack testpal}{6}
+\contentsline {section}{\numberline {B}C\IeC {\'o}digo en C}{7}
+\contentsline {section}{\numberline {C}Funci\IeC {\'o}n Pal\IeC {\'\i }ndromo en MIPS}{10}
+\contentsline {section}{\numberline {D}Funci\IeC {\'o}n testpal}{14}
+\contentsline {section}{\numberline {E}Funci\IeC {\'o}n testpal en C}{16}
+\contentsline {section}{\numberline {F}Enunciado}{16}

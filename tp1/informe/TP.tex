@@ -123,10 +123,13 @@
 \newpage
 
 \section{Introducción}
-Este trabajo práctico, consistió principalmente en la codificación de la función palíndromo en código mips, implementada previamente en el tp0 en lenguaje C. Además, se reestructuro el método de input/output del programa para poder limitar la cantidad de acceso a escritura y lectura. Esto se logró con la utilización de buffers, tanto de escritura como de lectura. Los cuales se leen/escriben bien cuando se llenan o cuando se llego al final de la entrada y no hay que analizar más palabras.  
-Todo esto, nos obligó a internalizarnos mucho más con el conjunto de instrucciones assembly para mips 32, y el uso de syscalls. Además, vimos de forma práctica, como llamar a funciones de archivos .s desde codigo C. El uso de un debugger fue de gran importancia para todo el desarrollo del prorgama en mips.
+
+Este trabajo práctico, consistió principalmente en la codificación de la función palíndromo en código mips, implementada previamente en el tp0 en lenguaje C. Además, se reestructuro el método de input/output del programa para poder limitar la cantidad de acceso a escritura y lectura. Esto se logró con la utilización de buffers, tanto de escritura como de lectura. Los cuales se leen/escriben bien cuando se llenan o cuando se llego al final de la entrada y no hay que analizar más palabras.
+
+Con esto tomamos como objetivo también poder hacer un análisis del costo de las llamadas a sistema. La idea es ver cuanto pierde un programa en performance al realizar estas llamadas.
+
+Todo esto, nos obligó a interiorizarnos mucho más con el conjunto de instrucciones assembly para mips 32, y el uso de syscalls. Además, vimos de forma práctica, como llamar a funciones de archivos .s desde codigo C. El uso de un debugger fue de gran importancia para todo el desarrollo del prorgama en mips.
 A continuación, se ve la documentación del programa, forma de compilarlo, casos de prueba armados, análisis del problema y su solución, y el código fuente del programa.
- 
 
 \section{Documentación}
 El uso del programa se compone de las siguientes opciones que le son pasadas por parámetro:
@@ -139,6 +142,16 @@ El uso del programa se compone de las siguientes opciones que le son pasadas por
 	\item \texttt{-O} o \texttt{--iobuf-bytes}: recibe como parámetro el tamaño en bytes del buffer de salida.
 	
 \end{itemize}
+
+\subsection{Diagrama de Proceso}
+A continuación se muestra un diagrama del proceso que recorre el programa, haciendo mención de los buffers que se utilizan y las acciones de comunicación de datos entre ellos.
+
+\begin{figure}[H]
+	\centering	
+	\includegraphics[width=\textwidth]{diagra_proceso}
+	\caption{Diagrama del proceso de comunicación entre buffers}
+\end{figure}
+
 
 \section{Compilación}
 Dentro del directorio raiz se encuentra un Makefile. Ejecuntando \texttt{make} se compilara el programa y se generará el ejecutable \texttt{tp1}.
