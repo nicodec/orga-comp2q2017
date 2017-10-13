@@ -19,9 +19,10 @@ palindrome:
     subu	sp, sp, 60
     
 	.cprestore 32
-	sw	ra, 56(sp)
+    
+	sw	ra,  56(sp)
 	sw	$fp, 52(sp)
-	sw	gp, 48(sp)
+	sw	gp,  48(sp)
 
     sw  a0, 0(sp)       #file_in
     sw  a1, 4(sp)       #ibuf
@@ -41,9 +42,8 @@ palindrome:
     jal	mymalloc	    # llamo a la funcion
     sw 	v0, 20(sp)		# guardo la direccion de memoria reservada para el buffer de PALABRA
     add t0, zero, zero
-    sw  t0, 32(sp)      # guardo el tamaño del buffer (incialmente vacio)
+    sw  t0, 16(sp)      # guardo el tamaño del buffer (incialmente vacio)
     
-
     lw	a0, 4(sp)		# cargo el parametro para mymalloc
     jal	mymalloc	    # llamo a la funcion
     sw 	v0, 24(sp)		# guardo la direccion de memoria reservada para el buffer de ENTRADA
@@ -107,13 +107,13 @@ leoByte:
     
 	# sino: pongo a c en el buffer de palabra (voy construyendo la palabra)
     la  t7, 20(sp) # en t7 tengo la direccion del buffer PALABRA
-    lw  t8, 32(sp) # guardo en t8 el tamaño del buffer PALABRA
+    lw  t8, 16(sp) # guardo en t8 el tamaño del buffer PALABRA
     add t7, t7, t8 # en t7 la direccion del char a guardar
     sb  t2, 0(t7)
     
 	# buffer_word.size ++
     addi    t8, 1
-    sw      t8, 32(sp)
+    sw      t8, 16(sp)
         
 	# (ver que el buffer word no se llene)
 	# (si se llena pedir mas memoria, hacer swap con memoria pedida y memoria vieja)
@@ -134,7 +134,7 @@ esPalindromoTrue:
     
     la  t0, 20(sp)  # en t0 addr de buffer PALABRA
     la  t1, 28(sp)  # en t1 addr de buffer SALIDA
-    lw  t2, 32(sp)  # en t2 tam buffer PALABRA
+    lw  t2, 16(sp)  # en t2 tam buffer PALABRA
     lw  t3, 40(sp)  # en t3 tam buffer SALIDA
     add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
 
