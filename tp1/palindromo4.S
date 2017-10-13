@@ -19,7 +19,7 @@ palindrome:
 
     subu	sp, sp, 80
     
-	.cprestore 64
+	.cprestore 32
     
 	sw	ra,  72(sp)
 	sw	$fp, 64(sp)
@@ -178,15 +178,15 @@ llenarBufferSalida:
     blt t4, t2, llenarBufferSalida
 
     #sino => se termino la palabra -> guardo \n en buffer salida
-    add t7, zero, 10    # guardo en t7 el valor 10 ('\n')
-    add t1, t1, t3      # addr SALIDA + j (SALIDA [j])
-    sb  t7, 0(t1)          # SALIDA[j] = '\n'
-    addi    t3, t3, 1   # j + 1
+    add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
+    add     t1, t1, t3      # addr SALIDA + j (SALIDA [j])
+    sb      t7, 0(t1)       # SALIDA[j] = '\n'
+    addi    t3, t3, 1       # j + 1
     sw      t3, 40(sp)
     add     t9, zero, 1
     sw      t9, 76(sp)
     
-    beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
+    bgt     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
     b llenarBufferSalida
 
