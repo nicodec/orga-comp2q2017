@@ -7,16 +7,17 @@
 	.globl	testpal
 	.ent	testpal    
 testpal:
-    .frame $fp, 24, ra
+    .frame $fp, 32, ra
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
-    subu	sp, sp, 24
-	.cprestore 32
+    subu	sp, sp, 32
+	.cprestore 16
     
-	sw	ra, 20(sp)
+	sw	ra,  20(sp)
 	sw	$fp, 16(sp)
-	sw	gp, 12(sp)
+    sw	a0,  0(sp)
+	sw	a1, 4(sp)
 
     move	$fp, sp
 
@@ -76,8 +77,7 @@ return:
 	move	sp, $fp
 	lw	    ra, 20(sp)
 	lw	    $fp, 16(sp)
-    lw	    gp, 12(sp)
-	addu	sp, sp, 24
+	addu	sp, sp, 32
 	j	    ra
 	.end	testpal
 
