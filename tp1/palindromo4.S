@@ -168,8 +168,10 @@ llenarBufferSalida:
     addi    t4, t4, 1   # i + 1
 
     seq     t5, t6, t3
-    add     t5, t5, t2
-    beq     t9, 1, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
+    add     t7, t4, 1
+    slt     t7, t4, t2
+    add     t5, t5, t7
+    beq     t5, 2, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
     
 
     #me fijo si no se termino la palabra
