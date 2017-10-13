@@ -142,6 +142,8 @@ Dentro del directorio raiz se encuentra un Makefile. Ejecuntando \texttt{make} s
 
 \section{Pruebas}
 Para las pruebas se proveen de dos scripts que las ejecutan.
+Se utilizaron las mismas pruebas que para el tp0, solo que fueron corridas varias veces variando los parametros -O y -I del programa.
+
 El primer script \texttt{test.sh} ejecuta los ejemplos del enunciado.
 
 El segundo script \texttt{test\_p.sh} ejecuta las pruebas propias.
@@ -198,6 +200,43 @@ Test passed
 All 9 tests passed!!!
 --------------------
 \end{lstlisting}
+
+\section{Análisis}
+Hemos utilizado este programa para analizar los tiempos de las llamadas al kernel. Las syscalls son llamadas al sistema, lo que requiere un cambio de entorno (de modo usuario a modo kernel).
+
+Como se provee un buffer de entrada y de salida al modificar el tamaño de estos, estamos disminuyendo o aumentando los syscalls read y write, es decir, cuanto mayor el tamaño del buffer menor cantidad de syscalls y viceversa.
+
+Para realizar este análisis utilizamos un archivo de texto como entrada de un tamaño de N bytes. Luego medimos los tiempos de ejecucion del programa. A continuacion se muestra una tabla con los resultados:
+
+\begin{table}[h]
+	\centering
+	\textbf{Tiempos de ejecucion}\\
+	\begin{tabular}{|c|c|c|}
+		\hline
+		Tamaño Buffer Entrada & Tamaño Buffer Salida & Tiempo Ejecucion \\
+		\hline
+		1 & 1 & - \\
+		\hline
+		10 & 10 & - \\
+		\hline
+		100 & 100 & - \\
+		\hline
+		1000 & 1000 & - \\
+		\hline
+		10 & 1 & - \\
+		\hline
+		100 & 1 & - \\
+		\hline
+		1000 & 1 & - \\
+		\hline
+		1 & 10 & - \\
+		\hline
+		1 & 100 & - \\
+		\hline
+		1 & 1000 & - \\
+		\hline
+	\end{tabular}
+\end{table}
 
 \section{Conclusión}
 

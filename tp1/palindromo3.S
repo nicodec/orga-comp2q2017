@@ -11,18 +11,18 @@
 	.globl	palindrome
 	.ent	palindrome
 palindrome:
-	.frame $fp, 60, ra
+	.frame $fp, 76, ra
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
 
-    subu	sp, sp, 60
+    subu	sp, sp, 76
     
 	.cprestore 32
     
-	sw	ra,  56(sp)
-	sw	$fp, 52(sp)
-	sw	gp,  48(sp)
+	sw	ra,  72(sp)
+	sw	$fp, 68(sp)
+	sw	gp,  64(sp)
 
     sw  a0, 0(sp)       #file_in
     sw  a1, 4(sp)       #ibuf
@@ -72,7 +72,8 @@ leerArchivo:
     beqz v0, palindromoReturn # si read no lee nada finalizo el programa
 
     add t0, zero, zero  # en t0 cargo el indice inicial del buffer
-    # move t9, v0         # en t9 cargo el tamaño del contenido del buffer
+    sw  t0, 48(sp)
+    
     sw  v0, 36(sp)
     
 
@@ -81,6 +82,7 @@ leoByte:
     beq t9, zero, leerArchivo # si buffer_entrada.size == 0 => leerArchivo
 
     # c = leo un byte <- buffer_entrada
+    lw  t0, 48(sp)
     lw  t1, 24(sp)  # cargo la direccion del buffer de entrada en t1
     add t1, t1, t0  # a la direccion le sumo el indice
     lb  t2, 0(t1)      # c = t2, guardo en t2 el byte
@@ -112,12 +114,13 @@ leoByte:
     lw  t7, 20(sp) # en t7 tengo la direccion del buffer PALABRA
     lw  t8, 16(sp) # guardo en t8 el tamaño del buffer PALABRA
     add t7, t7, t8 # en t7 la direccion del char a guardar
-    sb  t2, 0(t7)
+    sb  t2, 0(t7)  
     
 	# buffer_word.size ++
     addi    t8, 1
     sw      t8, 16(sp)
-    addi     t0, t0, 1 # al indice le sumo 1
+    addi    t0, t0, 1 # al indice le sumo 1
+    sw      t0, 48(sp)
         
 	# (ver que el buffer word no se llene)
 	# (si se llena pedir mas memoria, hacer swap con memoria pedida y memoria vieja)
@@ -130,6 +133,8 @@ test_palindromo:
 	#sino => leoByte
 	
 esPalindromoTrue:
+
+
 	# buffer_word -> buffer_salida
 	# (hay que fijarse que buffer salida tenga espacio suficiente)
 	# si se llena buffer salida => escribirArchivo
@@ -164,6 +169,7 @@ llenarBufferSalida:
     add t1, t1, t3      # addr SALIDA + j (SALIDA [j])
     sb  t7, 0(t1)          # SALIDA[j] = '\n'
     addi    t3, t3, 1   # j + 1
+    sw      t3, 40(sp)
     
     beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
@@ -173,7 +179,7 @@ escribirArchivo:
 	# write buffer_salida -> file_out
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
-    lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida #SEE
+    lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
     lw  a2, 40(sp)      #cargo en a2 el tamaño del buffer
     syscall
 
@@ -193,9 +199,12 @@ read_error:
 palindromoReturn:
 	move    v0, zero
 	move	sp, $fp
-	lw	    ra, 56(sp)
-	lw	    $fp, 52(sp)
-	addu	sp, sp, 60
+
+    lw	ra,  72(sp)
+	lw	$fp, 68(sp)
+	lw	gp,  64(sp)
+
+    addu	sp, sp, 76
 	j	    ra
 	.end	palindrome
     

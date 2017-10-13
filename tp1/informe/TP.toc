@@ -4,7 +4,8 @@
 \contentsline {section}{\numberline {3}Compilaci\IeC {\'o}n}{2}
 \contentsline {section}{\numberline {4}Pruebas}{2}
 \contentsline {subsection}{\numberline {4.1}Corridas de Prueba}{3}
-\contentsline {section}{\numberline {5}Conclusi\IeC {\'o}n}{3}
-\contentsline {section}{\numberline {6}C\IeC {\'o}digo en C}{3}
-\contentsline {section}{\numberline {7}Funci\IeC {\'o}n Palindromo en MIPS}{8}
-\contentsline {section}{\numberline {8}Enunciado}{10}
+\contentsline {section}{\numberline {5}An\IeC {\'a}lisis}{3}
+\contentsline {section}{\numberline {6}Conclusi\IeC {\'o}n}{4}
+\contentsline {section}{\numberline {7}C\IeC {\'o}digo en C}{4}
+\contentsline {section}{\numberline {8}Funci\IeC {\'o}n Palindromo en MIPS}{9}
+\contentsline {section}{\numberline {9}Enunciado}{11}
