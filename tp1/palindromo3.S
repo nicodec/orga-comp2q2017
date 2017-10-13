@@ -72,10 +72,12 @@ leerArchivo:
     beqz v0, palindromoReturn # si read no lee nada finalizo el programa
 
     add t0, zero, zero  # en t0 cargo el indice inicial del buffer
-    move t9, v0         # en t9 cargo el tamaño del contenido del buffer
+    # move t9, v0         # en t9 cargo el tamaño del contenido del buffer
+    sw  v0, 36(sp)
     
 
 leoByte:
+    lw  t9, 36(sp)
     beq t9, zero, leerArchivo # si buffer_entrada.size == 0 => leerArchivo
 
     # c = leo un byte <- buffer_entrada
@@ -85,6 +87,7 @@ leoByte:
     
 	#buffer_entrada.size --
     addi t9, t9, -1
+    sw t9, 36(sp)
     
 	# si c no es alfanumerico tengo que testear
     # si lo que hay en el buffer de word es palindromo
@@ -114,6 +117,7 @@ leoByte:
 	# buffer_word.size ++
     addi    t8, 1
     sw      t8, 16(sp)
+    addi     t0, t0, 1 # al indice le sumo 1
         
 	# (ver que el buffer word no se llene)
 	# (si se llena pedir mas memoria, hacer swap con memoria pedida y memoria vieja)
