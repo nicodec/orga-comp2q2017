@@ -63,7 +63,7 @@ leerArchivo:
 
     li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
 	lw	a0, 0(sp)       # a0: file descriptor number.
-	la	a1, 24(sp)      # a1: data pointer.
+	lw	a1, 24(sp)      # a1: data pointer.  #SEE
 	lw	a2, 4(sp)       # a2: available space.
 	syscall
 
@@ -79,7 +79,7 @@ leoByte:
     beq t9, zero, leerArchivo # si buffer_entrada.size == 0 => leerArchivo
 
     # c = leo un byte <- buffer_entrada
-    la  t1, 24(sp)  # cargo la direccion del buffer de entrada en t1
+    lw  t1, 24(sp)  # cargo la direccion del buffer de entrada en t1
     add t1, t1, t0  # a la direccion le sumo el indice
     lb  t2, 0(t1)      # c = t2, guardo en t2 el byte
     
@@ -106,7 +106,7 @@ leoByte:
 	beqz	t3, test_palindromo
     
 	# sino: pongo a c en el buffer de palabra (voy construyendo la palabra)
-    la  t7, 20(sp) # en t7 tengo la direccion del buffer PALABRA
+    lw  t7, 20(sp) # en t7 tengo la direccion del buffer PALABRA
     lw  t8, 16(sp) # guardo en t8 el tamaño del buffer PALABRA
     add t7, t7, t8 # en t7 la direccion del char a guardar
     sb  t2, 0(t7)
@@ -132,8 +132,8 @@ esPalindromoTrue:
 	# buffer_salida + '\n'
 	# buffer_salida.size ++
     
-    la  t0, 20(sp)  # en t0 addr de buffer PALABRA
-    la  t1, 28(sp)  # en t1 addr de buffer SALIDA
+    lw  t0, 20(sp)  # en t0 addr de buffer PALABRA
+    lw  t1, 28(sp)  # en t1 addr de buffer SALIDA
     lw  t2, 16(sp)  # en t2 tam buffer PALABRA
     lw  t3, 40(sp)  # en t3 tam buffer SALIDA
     add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
@@ -144,8 +144,9 @@ llenarBufferSalida:
     add     t0, t0, t4 
     lb      t5, 0(t0)      # t5 = PALABRA[i]
     sb      t5, 0(t1)      # SALIDA[j] = PALABRA[i]
-    lw      t6, 12(sp)  # t6 tamaño maximo buffer SALIDA
-    addi    t3, t3, 1   # j + 1
+    lw      t6, 12(sp)     # t6 tamaño maximo buffer SALIDA
+    addi    t3, t3, 1      # j + 1
+    sw      t3, 40(sp)     # guardo el tamaño del buffer SALIDA en el stack
     
     beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
     
@@ -168,7 +169,7 @@ escribirArchivo:
 	# write buffer_salida -> file_out
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
-    la  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
+    lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida #SEE
     lw  a2, 40(sp)      #cargo en a2 el tamaño del buffer
     syscall
 
