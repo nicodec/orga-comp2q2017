@@ -10,5 +10,9 @@ tp1: tp1.c palindrome.S mystrlen.S mymalloc.S
 tp1_3: tp1.c palindromo3.S mystrlen.S mymalloc.S testpal.S
 	$(CC) $(CFLAGS) -o $@ $> 
 
+tp5: tp1.c palindromo5.S mystrlen.S mymalloc.S testpal.S
+	$(CC) $(CFLAGS) -o $@ $> 
+
+
 clean:
 	rm -f $(PROGS) *.so *.o *.a *.core
