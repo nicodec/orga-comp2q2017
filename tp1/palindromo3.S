@@ -63,11 +63,7 @@ leerArchivo:
 
     li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
 	lw	a0, 0(sp)       # a0: file descriptor number.
-<<<<<<< HEAD
 	lw	a1, 24(sp)      # a1: data pointer.
-=======
-	lw	a1, 24(sp)      # a1: data pointer.  #SEE
->>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
 	lw	a2, 4(sp)       # a2: available space.
 	syscall
 
@@ -81,12 +77,8 @@ leerArchivo:
     
 
 leoByte:
-<<<<<<< HEAD
-    beqz t9, leerArchivo # si buffer_entrada.size == 0 => leerArchivo
-=======
     lw  t9, 36(sp)
     beq t9, zero, leerArchivo # si buffer_entrada.size == 0 => leerArchivo
->>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
 
     # c = leo un byte <- buffer_entrada
     lw  t1, 24(sp)  # cargo la direccion del buffer de entrada en t1
@@ -94,12 +86,8 @@ leoByte:
     lb  t2, 0(t1)      # c = t2, guardo en t2 el byte
     
 	#buffer_entrada.size --
-<<<<<<< HEAD
     sub 	t9, t9, 1
-=======
-    addi t9, t9, -1
     sw t9, 36(sp)
->>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
     
 	# si c no es alfanumerico tengo que testear
     # si lo que hay en el buffer de word es palindromo
@@ -186,11 +174,7 @@ escribirArchivo:
 	# write buffer_salida -> file_out
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
-<<<<<<< HEAD
     lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
-=======
-    lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida #SEE
->>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
     lw  a2, 40(sp)      #cargo en a2 el tamaño del buffer
     syscall
 
