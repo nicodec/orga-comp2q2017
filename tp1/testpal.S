@@ -24,7 +24,7 @@ testpal:
 
 test:
     slti	t0, a1, 2           # si a1 (len palabra) < 2 => es palindromo
-	bne	    t0, zero, returnTrue
+	bne	    t0, zero, esTrue
 
     add     a0, a0, t9          # palabra[i]
     lb      t1, 0(a0)           # t1 = palabra[i]

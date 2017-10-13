@@ -134,8 +134,8 @@ test_palindromo:
 	#si es palindromo => esPalindromoTrue
 	#sino => leoByte
 
-    li  a0, 1
-    li  a1, 2
+    lw  a0, 20(sp)      # cargo en a0 la direccion de la palabra
+    lw  a1, 16(sp)      # cargo en a1 len palabra
     jal testpal
     bnez v0, leoByte # si no es palindromo no hago nada y vuelvo a intentar leer un byte
     # si v0 = 0 entonces sigo adelantes
