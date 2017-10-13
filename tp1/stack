@@ -1,0 +1,24 @@
+76    /////////////////////
+72    ra                     
+68    gp                     
+64    fp                     
+      ---------------------
+60    /////////////////////
+56    /////////////////////
+52    PALABRA max size     
+48    SALIDA size          
+44    ENTRADA size         
+40    PALABRA size          
+36    SALIDA addr         
+32    ENTRADA addr
+28    PALABRA addr
+24    SALIDA pos
+20    ENTRADA pos
+16    PALABRA pos
+      --------------------
+12    a3
+8     a2
+4     a1
+0     a0
+      --------------------
+    
