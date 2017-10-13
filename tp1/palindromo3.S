@@ -170,6 +170,7 @@ escribirArchivo:
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
     la  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
     lw  a2, 40(sp)      #cargo en a2 el tamaño del buffer
+    syscall
 
     bne	a3, zero, write_error    #verifico error de escritura
 
