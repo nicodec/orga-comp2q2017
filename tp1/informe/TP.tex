@@ -123,7 +123,10 @@
 \newpage
 
 \section{Introducción}
-
+Este trabajo práctico, consistió principalmente en la codificación de la función palíndromo en código mips, implementada previamente en el tp0 en lenguaje C. Además, se reestructuro el método de input/output del programa para poder limitar la cantidad de acceso a escritura y lectura. Esto se logró con la utilización de buffers, tanto de escritura como de lectura. Los cuales se leen/escriben bien cuando se llenan o cuando se llego al final de la entrada y no hay que analizar más palabras.  
+Todo esto, nos obligó a internalizarnos mucho más con el conjunto de instrucciones assembly para mips 32, y el uso de syscalls. Además, vimos de forma práctica, como llamar a funciones de archivos .s desde codigo C. El uso de un debugger fue de gran importancia para todo el desarrollo del prorgama en mips.
+A continuación, se ve la documentación del programa, forma de compilarlo, casos de prueba armados, análisis del problema y su solución, y el código fuente del programa.
+ 
 
 \section{Documentación}
 El uso del programa se compone de las siguientes opciones que le son pasadas por parámetro:
@@ -239,7 +242,9 @@ Para realizar este análisis utilizamos un archivo de texto como entrada de un t
 \end{table}
 
 \section{Conclusión}
-
+De este trabajo práctico nos llevamos principalmente que es muy importante la experiencia y conocimiento de las instrucciones de Assembly para mips 32 y como usarlas eficientemente. También, pudimos ver por nuestros propios ojos como puede llegar a afectar al tiemo de ejecución de un progama la cantidad de syscalls que se realizan. Acotando las syscalls de read y de write con la utilización de un buffer de escritura y otro de lectura, vimos un speed up global del programa.
+Como dijimos previamente, cada syscall implica un cambio de entorno de modo usuario a modo kernel. Y si se repite consistemente este 'switch', el tiempo de ejecución del programa se ve fuertemente afectado. Por esto, siempre que se pueda acotar la cantidad de llamadas al sistema de un programa, se debería tratar de optimizarlas. En este caso particular, se acotó esa cantidad usando los buffers. 
+Fue muy importante también el uso de un debugger para poder arreglar problemas durante la codificación.
 
 \appendix
 
