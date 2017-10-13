@@ -63,7 +63,7 @@ leerArchivo:
 
     li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
 	lw	a0, 0(sp)       # a0: file descriptor number.
-	lw	a1, 24(sp)      # a1: data pointer.  #SEE
+	lw	a1, 24(sp)      # a1: data pointer.
 	lw	a2, 4(sp)       # a2: available space.
 	syscall
 
@@ -88,7 +88,7 @@ leoByte:
     lb  t2, 0(t1)      # c = t2, guardo en t2 el byte
     
 	#buffer_entrada.size --
-    addi t9, t9, -1
+    sub 	t9, t9, 1
     sw t9, 36(sp)
     
 	# si c no es alfanumerico tengo que testear
@@ -116,6 +116,7 @@ leoByte:
     add t7, t7, t8 # en t7 la direccion del char a guardar
     sb  t2, 0(t7)  
     
+    add 	t0, t0, 1
 	# buffer_word.size ++
     addi    t8, 1
     sw      t8, 16(sp)
