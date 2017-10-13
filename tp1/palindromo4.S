@@ -19,11 +19,11 @@ palindrome:
 
     subu	sp, sp, 80
     
-	.cprestore 32
+	.cprestore 64
     
 	sw	ra,  72(sp)
-	sw	$fp, 68(sp)
-	sw	gp,  64(sp)
+	sw	$fp, 64(sp)
+	sw	gp,  68(sp)
 
     sw  a0, 0(sp)       #file_in
     sw  a1, 4(sp)       #ibuf
@@ -219,8 +219,8 @@ palindromoReturn:
 	move	sp, $fp
 
     lw	ra,  72(sp)
-	lw	$fp, 68(sp)
-	lw	gp,  64(sp)
+	lw	$fp, 64(sp)
+	lw	gp,  68(sp)
 
     addu	sp, sp, 80
 	j	    ra
