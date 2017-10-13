@@ -60,7 +60,7 @@ prog:
 	beqz 	t7, buffer_write
 
 buffer_word_read:
-	beq		t0, t7, prog 
+	beq		t0, t7, prog
 	slti	t3, t2, 48
 	sne 	t4, t2, 45
 	add 	t3, t4, t3

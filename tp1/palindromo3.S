@@ -81,7 +81,7 @@ leoByte:
     # c = leo un byte <- buffer_entrada
     la  t1, 24(sp)  # cargo la direccion del buffer de entrada en t1
     add t1, t1, t0  # a la direccion le sumo el indice
-    lb  t2, t1      # c = t2, guardo en t2 el byte
+    lb  t2, 0(t1)      # c = t2, guardo en t2 el byte
     
 	#buffer_entrada.size --
     addi t9, t9, -1
@@ -109,7 +109,7 @@ leoByte:
     la  t7, 20(sp) # en t7 tengo la direccion del buffer PALABRA
     lw  t8, 32(sp) # guardo en t8 el tamaño del buffer PALABRA
     add t7, t7, t8 # en t7 la direccion del char a guardar
-    sb  t2, t7
+    sb  t2, 0(t7)
     
 	# buffer_word.size ++
     addi    t8, 1
@@ -136,25 +136,34 @@ esPalindromoTrue:
     la  t1, 28(sp)  # en t1 addr de buffer SALIDA
     lw  t2, 32(sp)  # en t2 tam buffer PALABRA
     lw  t3, 40(sp)  # en t3 tam buffer SALIDA
+    add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
 
-    addu    t1, t1, t3 # en t1 posicion para el proximo caracter
+    addu    t1, t1, t3 # en t1 posicion para el proximo caracter (t1 = j)
 
 llenarBufferSalida:
+    add     t0, t0, t4 
+    lb      t5, 0(t0)      # t5 = PALABRA[i]
+    sb      t1, 0(t5)      # SALIDA[j] = PALABRA[i]
+    lw      t6, 12(sp)  # t6 tamaño maximo buffer SALIDA
+    addi    t3, t3, 1   # j + 1
     
-
+    beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
     
+    addi    t4, t4, 1   # i + 1
 
+    #me fijo si no se termino la palabra
+    blt t4, t2, llenarBufferSalida
+
+    #sino => se termino la palabra -> guardo \n en buffer salida
+    add t7, zero, 10    # guardo en t7 el valor 10 ('\n')
+    add t1, t1, t3      # addr SALIDA + j (SALIDA [j])
+    sb  t7, 0(t1)          # SALIDA[j] = '\n'
+    addi    t3, t3, 1   # j + 1
     
-    
+    beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
+    b llenarBufferSalida
 
-
-
-
-    
-
-    
-	
 escribirArchivo:
 	# write buffer_salida -> file_out
     li  v0, SYS_write
