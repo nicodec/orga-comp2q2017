@@ -63,7 +63,11 @@ leerArchivo:
 
     li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
 	lw	a0, 0(sp)       # a0: file descriptor number.
+<<<<<<< HEAD
 	lw	a1, 24(sp)      # a1: data pointer.
+=======
+	lw	a1, 24(sp)      # a1: data pointer.  #SEE
+>>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
 	lw	a2, 4(sp)       # a2: available space.
 	syscall
 
@@ -72,11 +76,17 @@ leerArchivo:
     beqz v0, palindromoReturn # si read no lee nada finalizo el programa
 
     add t0, zero, zero  # en t0 cargo el indice inicial del buffer
-    move t9, v0         # en t9 cargo el tamaño del contenido del buffer
+    # move t9, v0         # en t9 cargo el tamaño del contenido del buffer
+    sw  v0, 36(sp)
     
 
 leoByte:
+<<<<<<< HEAD
     beqz t9, leerArchivo # si buffer_entrada.size == 0 => leerArchivo
+=======
+    lw  t9, 36(sp)
+    beq t9, zero, leerArchivo # si buffer_entrada.size == 0 => leerArchivo
+>>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
 
     # c = leo un byte <- buffer_entrada
     lw  t1, 24(sp)  # cargo la direccion del buffer de entrada en t1
@@ -84,7 +94,12 @@ leoByte:
     lb  t2, 0(t1)      # c = t2, guardo en t2 el byte
     
 	#buffer_entrada.size --
+<<<<<<< HEAD
     sub 	t9, t9, 1
+=======
+    addi t9, t9, -1
+    sw t9, 36(sp)
+>>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
     
 	# si c no es alfanumerico tengo que testear
     # si lo que hay en el buffer de word es palindromo
@@ -115,6 +130,7 @@ leoByte:
 	# buffer_word.size ++
     addi    t8, 1
     sw      t8, 16(sp)
+    addi     t0, t0, 1 # al indice le sumo 1
         
 	# (ver que el buffer word no se llene)
 	# (si se llena pedir mas memoria, hacer swap con memoria pedida y memoria vieja)
@@ -145,8 +161,9 @@ llenarBufferSalida:
     add     t0, t0, t4 
     lb      t5, 0(t0)      # t5 = PALABRA[i]
     sb      t5, 0(t1)      # SALIDA[j] = PALABRA[i]
-    lw      t6, 12(sp)  # t6 tamaño maximo buffer SALIDA
-    addi    t3, t3, 1   # j + 1
+    lw      t6, 12(sp)     # t6 tamaño maximo buffer SALIDA
+    addi    t3, t3, 1      # j + 1
+    sw      t3, 40(sp)     # guardo el tamaño del buffer SALIDA en el stack
     
     beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
     
@@ -169,7 +186,11 @@ escribirArchivo:
 	# write buffer_salida -> file_out
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
+<<<<<<< HEAD
     lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
+=======
+    lw  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida #SEE
+>>>>>>> b37b219e0912e3ba238f485b7176e79e316bd324
     lw  a2, 40(sp)      #cargo en a2 el tamaño del buffer
     syscall
 
