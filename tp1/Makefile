@@ -7,7 +7,7 @@ all: $(PROGS)
 tp1: tp1.c palindrome.S mystrlen.S mymalloc.S
 	$(CC) $(CFLAGS) -o $@ $>
 
-tp1_3: tp1.c palindromo3.S mystrlen.S mymalloc.S
+tp1_3: tp1.c palindromo3.S mystrlen.S mymalloc.S testpal.S
 	$(CC) $(CFLAGS) -o $@ $> 
 
 clean:

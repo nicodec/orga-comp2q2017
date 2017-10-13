@@ -10,6 +10,7 @@
 
 	.globl	palindrome
 	.ent	palindrome
+    
 palindrome:
 	.frame $fp, 76, ra
 	.set	noreorder
@@ -132,6 +133,12 @@ test_palindromo:
 	#me fijo si buffer_word es palindromo
 	#si es palindromo => esPalindromoTrue
 	#sino => leoByte
+
+    li  a0, 1
+    li  a1, 2
+    jal testpal
+    bnez v0, leoByte # si no es palindromo no hago nada y vuelvo a intentar leer un byte
+    # si v0 = 0 entonces sigo adelantes
 	
 esPalindromoTrue:
 
