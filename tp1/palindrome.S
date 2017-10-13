@@ -101,8 +101,14 @@ palindrome_check:
 
 esPalindromo:
 	lb  	t3, 0(t8)		# cargo en t3 el primer byte (primera letra)
+	move 	a0, t3
+	jal		to_lowercase
+	move 	t3, v0
 	add	    t4, t5, t8		# en t4 last + a1
 	lb  	t4, 0(t4)		# en t4 ultimo byte (ultima letra)
+	move 	a0, t4
+	jal		to_lowercase
+	move 	t4, v0
 	bne	    t3, t4, palindromo_fail   # si no son iguales no es palindromo
 
     #sino actualizo los indices
@@ -116,6 +122,18 @@ esPalindromo:
 palindromo_fail:
 	move	t9, zero
 	j 		buffer_word_read
+
+to_lowercase:
+	sgt 	a1, a0, 64
+	slti	a2, a0, 91
+	add 	a2, a1, a2
+	beq 	a2, 2, is_upper
+	move 	v0, a0
+	j 		ra
+
+is_upper:
+	add 	v0, a0, 32
+	j 		ra
 
 esTrue:
 # no se pueden usar los siguientes registros: t0, t1, t2, t7, t9
