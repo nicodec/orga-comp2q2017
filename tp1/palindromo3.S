@@ -141,8 +141,6 @@ test_palindromo:
     # si v0 = 0 entonces sigo adelantes
 	
 esPalindromoTrue:
-
-
 	# buffer_word -> buffer_salida
 	# (hay que fijarse que buffer salida tenga espacio suficiente)
 	# si se llena buffer salida => escribirArchivo
