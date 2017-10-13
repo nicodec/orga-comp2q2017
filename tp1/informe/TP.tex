@@ -245,6 +245,26 @@ Para realizar este análisis utilizamos un archivo de texto como entrada de un t
 
 \section*{Apéndice}
 
+\section{Stacks de Funciones}
+A continuación se muestran como fueron conformados los stacks de las funciones programadas en MIPS segun lo dispuesto por la ABI.
+
+\subsection{Stack palindromo}
+\begin{figure}[H]
+	\centering	
+	\includegraphics[width=0.6\textwidth]{stack_palindromo}
+	\caption{Stack de la función \texttt{int palindromo(int, size\_t, int, size\_t)}}
+\end{figure}
+
+\subsection{Stack testpal}
+\begin{figure}[H]
+	\centering	
+	\includegraphics[width=0.6\textwidth]{stack_testpal}
+	\caption{Stack de la función \texttt{int testpal(char *, size\_t)}}
+\end{figure}
+
+
+
+
 \section{Código en C}
 El siguiente código corresponde al cuerpo principal del programa. Se encarga de procesar los parámetros, abrir los archivos, llamar a la función palíndromo (escrita en MIPS) y luego cerrar los archivos correspondientes.
 

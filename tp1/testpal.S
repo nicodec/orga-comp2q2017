@@ -33,7 +33,6 @@ test:
     jal     to_lowercase        # lo paso a lowercase
     move    t1, t8              # t1 = tolower(palabra[i])
 
-
     addi    t2, a1, -1          # t2 = len - 1
     add     t2, t2, a0
     lb      t2, 0(t2)           # t2 = palabra[len-1]
