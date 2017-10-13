@@ -143,7 +143,7 @@ esPalindromoTrue:
 llenarBufferSalida:
     add     t0, t0, t4 
     lb      t5, 0(t0)      # t5 = PALABRA[i]
-    sb      t1, 0(t5)      # SALIDA[j] = PALABRA[i]
+    sb      t5, 0(t1)      # SALIDA[j] = PALABRA[i]
     lw      t6, 12(sp)  # t6 tamaño maximo buffer SALIDA
     addi    t3, t3, 1   # j + 1
     
