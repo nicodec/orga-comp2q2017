@@ -12,12 +12,12 @@
 	.ent	palindrome
     
 palindrome:
-	.frame $fp, 80, ra
+	.frame $fp, 84, ra
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
 
-    subu	sp, sp, 80
+    subu	sp, sp, 84
     
 	.cprestore 60
     
@@ -163,6 +163,7 @@ esPalindromoTrue:
     lw  t2, 40(sp)  # cargo en t2 PALABRA size
     lw  t3, 24(sp)  # cargo en t3 SALIDA pos
     add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
+    sw      zero, 76(sp)
 
 llenarBufferSalida:
     addu    t1, t1, t3      # en t1 SALIDA addr + pos
@@ -174,11 +175,16 @@ llenarBufferSalida:
     sw      t3, 24(sp)      # guardo SALIDA pos en el stack
 
     lw      t6, 12(sp)              # cargo en t6 SALIDA max size
-    lw      t7, 48(sp)              # cargo en t7 SALIDA size
-    addi    t7, t7, 1               # SALIDA size +1
-    sw      t7, 48(sp)              # guardo SALIDA size en el stack
-    beq     t6, t3, escribirArchivo # si se llena el buffer escribo
-    beq     t7, t3, escribirArchivo # si pos == SALIDA size => escribo
+    # lw      t7, 48(sp)              # cargo en t7 SALIDA size
+    # addi    t7, t7, 1               # SALIDA size +1
+    # sw      t7, 48(sp)              # guardo SALIDA size en el stack
+    seq     t5, t6, t3
+    add     t7, t4, 1
+    slt     t7, t7, t2
+    add     t5, t5, t7
+    # beq     t6, t3, escribirArchivo # si se llena el buffer escribo
+    beq     t5, 2, escribirArchivo # si se llena el buffer escribo
+    # beq     t4, t3, escribirArchivo # si pos == SALIDA size => escribo
     
     # me fijo si no se termino la palabra
     blt t4, t2, llenarBufferSalida  # PALABRA pos < PALABRA size => sigo llenando
@@ -190,8 +196,10 @@ llenarBufferSalida:
     sb      t7, 0(t1)       # SALIDA[j] = '\n'
     addi    t3, t3, 1       # j + 1
     sw      t3, 40(sp)      # guardo SALIDA pos en el stack
-    
-    beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
+    add     t9, zero, 1
+    sw      t9, 76(sp)
+
+    bgt     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
     b llenarBufferSalida
 
@@ -208,6 +216,10 @@ escribirArchivo:
 
     add t0, zero, zero
     sw  t0, 24(sp)      # guardo en stack SALIDA pos = 0
+
+    lw     t9, 76(sp)
+    beq    t9, zero, llenarBufferSalida
+    
     sw  t0, 48(sp)      # guardo en stack SALIDA size = 0
 
     b leoByte           #vuelvo a intentar leer bytes del buffer de entrada
@@ -226,7 +238,7 @@ palindromoReturn:
 	lw	gp,  68(sp)
     lw	$fp, 64(sp)
 
-    addu	sp, sp, 80
+    addu	sp, sp, 84
 	j	    ra
 	.end	palindrome
     

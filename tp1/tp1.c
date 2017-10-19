@@ -150,7 +150,5 @@ int main(int argc, char *argv[]) {
         fclose(output_file);
     }
 
-    printf("sali bien\n");
-
     return 0;
 }

@@ -7,34 +7,39 @@
 	.globl	testpal
 	.ent	testpal    
 testpal:
-    .frame $fp, 32, ra
+    .frame $fp, 36, ra
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
-    subu	sp, sp, 32
-	.cprestore 16
+
+    subu	sp, sp, 36
+
+	.cprestore 24
     
 	sw	ra,  20(sp)
 	sw	$fp, 16(sp)
     sw	a0,  0(sp)
 	sw	a1, 4(sp)
+    sw  t4, 28(sp)          # no estoy seguro de si se usan previamente por lo tanto los guardo para prevenir sobreescritura
+    sw  t5, 32(sp)
 
     move	$fp, sp
 
-    add     t9, zero, zero # i = 0
+    move    t4, a1
+    add     t5, zero, zero # i = 0
 
 test:
     slti	t0, a1, 2           # si a1 (len palabra) < 2 => es palindromo
 	bne	    t0, zero, esTrue
 
-    add     a0, a0, t9          # palabra[i]
+    #add     a0, a0, t5          # palabra[i]
     lb      t1, 0(a0)           # t1 = palabra[i]
 
     move    t8, t1
     jal     to_lowercase        # lo paso a lowercase
     move    t1, t8              # t1 = tolower(palabra[i])
 
-    addi    t2, a1, -1          # t2 = len - 1
+    sub     t2, a1, 1          # t2 = len - 1
     add     t2, t2, a0
     lb      t2, 0(t2)           # t2 = palabra[len-1]
 
@@ -46,9 +51,12 @@ test:
 
     #sino actualizo los indices
 
+    sub     t4, t4, 1
+    add     a0, a0, 1           # muevo el puntero de t8 a la siguiente letra
     sub     a1, a1, 2           # len = len - 2
-    addi    t9, t9, 1           # i = i + 1
+    addi    t5, t5, 1           # i = i + 1
 
+    blt     t4, t5, esTrue
     j test
 
 esFalse:
@@ -77,7 +85,9 @@ return:
 	move	sp, $fp
 	lw	    ra, 20(sp)
 	lw	    $fp, 16(sp)
-	addu	sp, sp, 32
+    lw      t4, 28(sp)
+    lw      t5, 32(sp)
+	addu	sp, sp, 36
 	j	    ra
 	.end	testpal
 
