@@ -82,6 +82,13 @@ leerArchivo:
     
     sw  v0, 44(sp)      # guardo en el stack ENTRADA size
 
+test:
+    lw  a0, 32(sp)      # cargo en a0 la PALABRA addr
+    lw  a1, 44(sp)      # cargo en a1 PALABRA size
+    jal testpal         # esPalindromo(PALABRA addr, PALABRA size)
+
+    bnez v0, palindromoReturn # si v0 = 0 => palindromo true
+
 escribirArchivo:
     # write buffer_salida -> file_out
     li  v0, SYS_write   # write
