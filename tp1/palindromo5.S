@@ -159,13 +159,15 @@ esPalindromoTrue:
 	# buffer_salida.size ++
     
     lw  t2, 40(sp)  # cargo en t2 PALABRA size
-    lw  t3, 24(sp)  # cargo en t3 SALIDA pos
+    #lw  t3, 24(sp)  # cargo en t3 SALIDA pos
     add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
     sw      zero, 76(sp)
 
 llenarBufferSalida:
     lw      t0, 28(sp)      # cargo en t0 PALABRA addr
     lw      t1, 36(sp)      # cargo en t1 SALIDA addr
+    lw      t3, 24(sp)      # cargo en t3 SALIDA pos
+
     addu    t1, t1, t3      # en t1 SALIDA addr + pos
     add     t0, t0, t4      # en t0 PALABRA addr + pos
     lb      t5, 0(t0)       # t5 = PALABRA[i]
@@ -209,7 +211,7 @@ escribirArchivo:
     li  v0, SYS_write   # write
     lw  a0, 8(sp)       # cargo en a0 el fno del archivo de salida
     lw  a1, 36(sp)      # cargo en a1 la direccion del buffer de salida
-    lw  a2, 48(sp)      # cargo en a2 el tamaño del buffer
+    lw  a2, 12(sp)      # cargo en a2 el tamaño del buffer
     syscall
 
     bne	a3, zero, write_error    #verifico error de escritura
