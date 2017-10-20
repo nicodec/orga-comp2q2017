@@ -83,8 +83,8 @@ leerArchivo:
     sw  v0, 44(sp)      # guardo en el stack ENTRADA size
 
 leoByte:
-    lw  t9, 44(sp)      # cargo en t9 ENTRADA size
-    beq t9, zero, leerArchivo # si ENTRADA size == 0 => leerArchivo
+    lw  t5, 44(sp)      # cargo en t5 ENTRADA size
+    beq t5, zero, leerArchivo # si ENTRADA size == 0 => leerArchivo
 
     # c = leo un byte <- buffer_entrada
     lw  t0, 20(sp)      # cargo en t0 ENTRADA pos (t0 = i)
@@ -92,9 +92,9 @@ leoByte:
     add t1, t1, t0      # sumo ENTRDA addr + pos
     lb  t2, 0(t1)       # c: t2 = ENTRADA[i]
     
-    sub t9, t9, 1       # ENTRADA size - 1
+    sub t5, t5, 1       # ENTRADA size - 1
     add t0, t0, 1       # ENTRADA pos + 1
-    sw  t9, 44(sp)      # guardo en stack ENTRADA size
+    sw  t5, 44(sp)      # guardo en stack ENTRADA size
     sw  t0, 20(sp)      # guardo en stack ENTRADA pos
 
 testAlfaNumerico:
@@ -158,14 +158,14 @@ esPalindromoTrue:
 	# buffer_salida + '\n'
 	# buffer_salida.size ++
     
-    lw  t0, 28(sp)  # cargo en t0 PALABRA addr
-    lw  t1, 36(sp)  # cargo en t1 SALIDA addr
     lw  t2, 40(sp)  # cargo en t2 PALABRA size
     lw  t3, 24(sp)  # cargo en t3 SALIDA pos
     add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
     sw      zero, 76(sp)
 
 llenarBufferSalida:
+    lw      t0, 28(sp)      # cargo en t0 PALABRA addr
+    lw      t1, 36(sp)      # cargo en t1 SALIDA addr
     addu    t1, t1, t3      # en t1 SALIDA addr + pos
     add     t0, t0, t4      # en t0 PALABRA addr + pos
     lb      t5, 0(t0)       # t5 = PALABRA[i]
@@ -196,8 +196,8 @@ llenarBufferSalida:
     sb      t7, 0(t1)       # SALIDA[j] = '\n'
     addi    t3, t3, 1       # j + 1
     sw      t3, 40(sp)      # guardo SALIDA pos en el stack
-    add     t9, zero, 1
-    sw      t9, 76(sp)
+    add     t8, zero, 1
+    sw      t8, 76(sp)
 
     bgt     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
@@ -217,8 +217,8 @@ escribirArchivo:
     add t0, zero, zero
     sw  t0, 24(sp)      # guardo en stack SALIDA pos = 0
 
-    lw     t9, 76(sp)
-    beq    t9, zero, llenarBufferSalida
+    lw     t8, 76(sp)
+    beq    t8, zero, llenarBufferSalida
     
     sw  t0, 48(sp)      # guardo en stack SALIDA size = 0
 
