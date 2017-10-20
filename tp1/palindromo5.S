@@ -181,7 +181,7 @@ llenarBufferSalida:
     # addi    t7, t7, 1               # SALIDA size +1
     # sw      t7, 48(sp)              # guardo SALIDA size en el stack
     seq     t5, t6, t3
-    add     t7, t4, 1
+    #add     t7, t4, 1
     slt     t7, t7, t2
     add     t5, t5, t7
     # beq     t6, t3, escribirArchivo # si se llena el buffer escribo
@@ -193,7 +193,7 @@ llenarBufferSalida:
 
     # sino => se termino la palabra -> guardo \n en buffer salida
     add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
-    lw  t1, 36(sp)          # cargo en t1 SALIDA addr
+    lw      t1, 36(sp)      # cargo en t1 SALIDA addr
     add     t1, t1, t3      # en t1 SALIDA addr + pos
     sb      t7, 0(t1)       # SALIDA[j] = '\n'
     addi    t3, t3, 1       # j + 1
