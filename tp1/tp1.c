@@ -8,6 +8,7 @@
 
 extern size_t mystrlen(const char*);
 extern int palindrome(int, size_t, int, size_t);
+extern int myread(int,size_t);
 
 /* imprimir el uso de tp0 */
 void print_usage() {
@@ -136,11 +137,14 @@ int main(int argc, char *argv[]) {
     printf("file_in: %i\nibuf: %zu\nfile_out: %i\nobuf: %zu\n",
             file_in,ibuf,file_out,obuf);
 
-    
-    int a = palindrome(file_in,ibuf,file_out,obuf);
+    int r = myread(file_in,ibuf);
+
+    printf("r: %i\n",r);
+
+    // int a = palindrome(file_in,ibuf,file_out,obuf);
 
 
-    printf("a: %i\n",a);
+    //printf("a: %i\n",a);
     
     
     if (input == 0){
