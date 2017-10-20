@@ -16,7 +16,7 @@ tp5: tp1.c palindromo5.S mystrlen.S mymalloc.S testpal.S
 tp1_4: tp1.c palindromo4.S mystrlen.S mymalloc.S testpal.S
 	$(CC) $(CFLAGS) -o $@ $>
 
-tpt: tp1.c palindromo5.S mystrlen.S mymalloc.S testpal.S myread.S
+tpt: tp1.c palindromo6.S mystrlen.S mymalloc.S testpal.S
 	$(CC) $(CFLAGS) -o $@ $>
 
 clean:
