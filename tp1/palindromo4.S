@@ -12,12 +12,12 @@
 	.ent	palindrome
     
 palindrome:
-	.frame $fp, 80, ra
+	.frame $fp, 84, ra
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
 
-    subu	sp, sp, 80
+    subu	sp, sp, 84
     
 	.cprestore 32
     
@@ -148,16 +148,19 @@ esPalindromoTrue:
 	# buffer_salida.size ++
     
     #lw  t0, 20(sp)  # en t0 addr de buffer PALABRA
-    lw  t1, 28(sp)  # en t1 addr de buffer SALIDA
-    lw  t2, 16(sp)  # en t2 tam buffer PALABRA
-    lw  t3, 40(sp)  # en t3 tam buffer SALIDA
-    add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
-    sw  zero, 76(sp)
+    lw      t1, 28(sp)  # en t1 addr de buffer SALIDA
+    lw      t3, 40(sp)  # en t3 tam buffer SALIDA
+    add     t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
+    sw      t4, 80(sp)  # en t4 tam buffer SALIDA
+    sw      zero, 76(sp)
 
     addu    t1, t1, t3 # en t1 posicion para el proximo caracter (t1 = j)
 
 llenarBufferSalida:
-    lw  t0, 20(sp)  # en t0 addr de buffer PALABRA
+    lw      t0, 20(sp)      # en t0 addr de buffer PALABRA
+    lw      t2, 16(sp)  # en t2 tam buffer PALABRA
+    lw      t3, 40(sp)      # en t3 tam buffer SALIDA
+    lw      t4, 80(sp)
     add     t0, t0, t4 
     lb      t5, 0(t0)      # t5 = PALABRA[i]
     sb      t5, 0(t1)      # SALIDA[j] = PALABRA[i]
@@ -165,7 +168,8 @@ llenarBufferSalida:
     addi    t3, t3, 1      # j + 1
     sw      t3, 40(sp)     # guardo el tamaño del buffer SALIDA en el stack
     
-    addi    t4, t4, 1   # i + 1
+    addi    t4, t4, 1       # i + 1
+    sw      t4, 80(sp)
 
     seq     t5, t6, t3
     add     t7, t4, 1
@@ -224,7 +228,7 @@ palindromoReturn:
 	lw	$fp, 64(sp)
 	lw	gp,  68(sp)
 
-    addu	sp, sp, 80
+    addu	sp, sp, 84
 	j	    ra
 	.end	palindrome
     

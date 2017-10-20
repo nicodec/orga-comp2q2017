@@ -12,12 +12,12 @@
 	.ent	palindrome
     
 palindrome:
-	.frame $fp, 80, ra
+	.frame $fp, 84, ra
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
 
-    subu	sp, sp, 80
+    subu	sp, sp, 84
     
 	.cprestore 60
     
@@ -83,8 +83,8 @@ leerArchivo:
     sw  v0, 44(sp)      # guardo en el stack ENTRADA size
 
 leoByte:
-    lw  t9, 44(sp)      # cargo en t9 ENTRADA size
-    beq t9, zero, leerArchivo # si ENTRADA size == 0 => leerArchivo
+    lw  t5, 44(sp)      # cargo en t5 ENTRADA size
+    beq t5, zero, leerArchivo # si ENTRADA size == 0 => leerArchivo
 
     # c = leo un byte <- buffer_entrada
     lw  t0, 20(sp)      # cargo en t0 ENTRADA pos (t0 = i)
@@ -92,9 +92,9 @@ leoByte:
     add t1, t1, t0      # sumo ENTRDA addr + pos
     lb  t2, 0(t1)       # c: t2 = ENTRADA[i]
     
-    sub t9, t9, 1       # ENTRADA size - 1
+    sub t5, t5, 1       # ENTRADA size - 1
     add t0, t0, 1       # ENTRADA pos + 1
-    sw  t9, 44(sp)      # guardo en stack ENTRADA size
+    sw  t5, 44(sp)      # guardo en stack ENTRADA size
     sw  t0, 20(sp)      # guardo en stack ENTRADA pos
 
 testAlfaNumerico:
@@ -158,13 +158,16 @@ esPalindromoTrue:
 	# buffer_salida + '\n'
 	# buffer_salida.size ++
     
-    lw  t0, 28(sp)  # cargo en t0 PALABRA addr
-    lw  t1, 36(sp)  # cargo en t1 SALIDA addr
     lw  t2, 40(sp)  # cargo en t2 PALABRA size
-    lw  t3, 24(sp)  # cargo en t3 SALIDA pos
+    #lw  t3, 24(sp)  # cargo en t3 SALIDA pos
     add t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
+    sw      zero, 76(sp)
 
 llenarBufferSalida:
+    lw      t0, 28(sp)      # cargo en t0 PALABRA addr
+    lw      t1, 36(sp)      # cargo en t1 SALIDA addr
+    lw      t3, 24(sp)      # cargo en t3 SALIDA pos
+
     addu    t1, t1, t3      # en t1 SALIDA addr + pos
     add     t0, t0, t4      # en t0 PALABRA addr + pos
     lb      t5, 0(t0)       # t5 = PALABRA[i]
@@ -174,24 +177,34 @@ llenarBufferSalida:
     sw      t3, 24(sp)      # guardo SALIDA pos en el stack
 
     lw      t6, 12(sp)              # cargo en t6 SALIDA max size
-    lw      t7, 48(sp)              # cargo en t7 SALIDA size
-    addi    t7, t7, 1               # SALIDA size +1
-    sw      t7, 48(sp)              # guardo SALIDA size en el stack
-    beq     t6, t3, escribirArchivo # si se llena el buffer escribo
-    beq     t7, t3, escribirArchivo # si pos == SALIDA size => escribo
+    # lw      t7, 48(sp)              # cargo en t7 SALIDA size
+    # addi    t7, t7, 1               # SALIDA size +1
+    # sw      t7, 48(sp)              # guardo SALIDA size en el stack
+    seq     t5, t6, t3
+    #add     t7, t4, 1
+    slt     t7, t7, t2
+    add     t5, t5, t7
+    # beq     t6, t3, escribirArchivo # si se llena el buffer escribo
+    beq     t5, 2, escribirArchivo # si se llena el buffer escribo
+    # beq     t4, t3, escribirArchivo # si pos == SALIDA size => escribo
     
     # me fijo si no se termino la palabra
     blt t4, t2, llenarBufferSalida  # PALABRA pos < PALABRA size => sigo llenando
 
+write_endofline:
     # sino => se termino la palabra -> guardo \n en buffer salida
+    lw      t3, 24(sp)      # cargo en t3 SALIDA pos
     add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
-    lw  t1, 36(sp)          # cargo en t1 SALIDA addr
+    lw      t1, 36(sp)      # cargo en t1 SALIDA addr
     add     t1, t1, t3      # en t1 SALIDA addr + pos
     sb      t7, 0(t1)       # SALIDA[j] = '\n'
     addi    t3, t3, 1       # j + 1
     sw      t3, 40(sp)      # guardo SALIDA pos en el stack
-    
-    beq     t6, t3, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
+    add     t8, zero, 1
+    sw      t8, 76(sp)
+    add     t4, t4, 1
+
+    beq     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
     b llenarBufferSalida
 
@@ -201,13 +214,19 @@ escribirArchivo:
     li  v0, SYS_write   # write
     lw  a0, 8(sp)       # cargo en a0 el fno del archivo de salida
     lw  a1, 36(sp)      # cargo en a1 la direccion del buffer de salida
-    lw  a2, 48(sp)      # cargo en a2 el tamaño del buffer
+    lw  a2, 12(sp)      # cargo en a2 el tamaño del buffer
     syscall
 
     bne	a3, zero, write_error    #verifico error de escritura
 
     add t0, zero, zero
     sw  t0, 24(sp)      # guardo en stack SALIDA pos = 0
+
+    beq     t4, t2, write_endofline
+
+    lw     t8, 76(sp)
+    beq    t8, zero, llenarBufferSalida
+    
     sw  t0, 48(sp)      # guardo en stack SALIDA size = 0
 
     b leoByte           #vuelvo a intentar leer bytes del buffer de entrada
@@ -226,7 +245,7 @@ palindromoReturn:
 	lw	gp,  68(sp)
     lw	$fp, 64(sp)
 
-    addu	sp, sp, 80
+    addu	sp, sp, 84
 	j	    ra
 	.end	palindrome
     
