@@ -191,7 +191,9 @@ llenarBufferSalida:
     # me fijo si no se termino la palabra
     blt t4, t2, llenarBufferSalida  # PALABRA pos < PALABRA size => sigo llenando
 
+write_endofline:
     # sino => se termino la palabra -> guardo \n en buffer salida
+    lw      t3, 24(sp)      # cargo en t3 SALIDA pos
     add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
     lw      t1, 36(sp)      # cargo en t1 SALIDA addr
     add     t1, t1, t3      # en t1 SALIDA addr + pos
@@ -200,8 +202,9 @@ llenarBufferSalida:
     sw      t3, 40(sp)      # guardo SALIDA pos en el stack
     add     t8, zero, 1
     sw      t8, 76(sp)
+    add     t4, t4, 1
 
-    bgt     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
+    beq     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
     b llenarBufferSalida
 
@@ -218,6 +221,8 @@ escribirArchivo:
 
     add t0, zero, zero
     sw  t0, 24(sp)      # guardo en stack SALIDA pos = 0
+
+    beq     t4, t2, write_endofline
 
     lw     t8, 76(sp)
     beq    t8, zero, llenarBufferSalida
