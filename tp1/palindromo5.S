@@ -12,12 +12,12 @@
 	.ent    palindrome
 	
 palindrome:
-	.frame $fp, 84, ra
+	.frame $fp, 88, ra
 	.set    noreorder
 	.cpload t9
 	.set    reorder
 
-	subu    sp, sp, 84
+	subu    sp, sp, 88
 	
 	.cprestore 60
 	
@@ -57,6 +57,7 @@ palindrome:
 	add t0, zero, zero
 	sw  t0, 48(sp)      # guardo el tamaño del buffer (incialmente vacio)
 
+	sw 	zero, 84(sp)	# marca fin de proceso
 	add t0, zero, zero
 	sw  t0, 16(sp)      # guardo SALIDA pos = 0
 	sw  t0, 20(sp)      # guardo ENTRADA pos = 0
@@ -67,20 +68,22 @@ palindrome:
 leerArchivo:
 	#read file_in -> buffer_entrada (I Bytes)
 
-	li  v0, SYS_read    # ver dentro de <sys/syscall.h>.
-	lw  a0, 0(sp)       # a0: file descriptor number.
-	lw  a1, 32(sp)      # a1: data pointer.
-	lw  a2, 4(sp)       # a2: available space.
+	li  	v0, SYS_read    # ver dentro de <sys/syscall.h>.
+	lw  	a0, 0(sp)       # a0: file descriptor number.
+	lw  	a1, 32(sp)      # a1: data pointer.
+	lw  	a2, 4(sp)       # a2: available space.
 	syscall
 
-	bne a3, zero, read_error    #verifico error de lectura
+	bne 	a3, zero, read_error    #verifico error de lectura
 
-	beqz v0, palindromoReturn # si read no lee nada finalizo el programa
+	seq  	t0, v0, zero
+	sw 		t0, 84(sp) 		# si no se leyeron mas caracteres pongo el flag en 1
+	beqz 	v0, escribirArchivo # si read no lee nada finalizo el programa
 
-	add t0, zero, zero  # en t0 cargo el indice inicial del buffer
-	sw  t0, 20(sp)      # guardo en el stack ENTRADA pos
+	add 	t0, zero, zero  # en t0 cargo el indice inicial del buffer
+	sw  	t0, 20(sp)      # guardo en el stack ENTRADA pos
 	
-	sw  v0, 44(sp)      # guardo en el stack ENTRADA size
+	sw  	v0, 44(sp)      # guardo en el stack ENTRADA size
 
 leoByte:
 	lw  t5, 44(sp)      # cargo en t5 ENTRADA size
@@ -129,11 +132,29 @@ testAlfaNumerico:
 	
 	addi    t8, 1       # PALABRA pos + 1
 	sw      t8, 16(sp)  # guardo PALABRA pos en el stack
+
+	lw 		t6, 52(sp)	# tamaño maximo de palabra
+	sne 	t6, t8, t6 	# si no son iguales t6 = 1 sino t6 = 0
+	sub 	t6, t6, 1
+	bltzal 	t6, reasignar_buffer_palabra
 			
 	# (ver que el buffer word no se llene)
 	# (si se llena pedir mas memoria, hacer swap con memoria pedida y memoria vieja)
 	
 	b leoByte # vuelvo a leer un byte
+
+reasignar_buffer_palabra:
+	sw 		ra, 80(sp)
+	lw 		a0, 28(sp)
+	lw 		a1, 52(sp)
+	mul		a2, a1, 2
+	jal 	myremalloc
+	sw 		v0, 28(sp)
+	sw 		a2, 52(sp)
+
+	lw 		ra, 80(sp)
+	sw 		a2, 80(sp)
+	j 	ra
 
 test_palindromo:
 
@@ -209,7 +230,8 @@ write_endofline:
 
 	beq     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
-	b llenarBufferSalida
+	#b llenarBufferSalida
+	b leoByte
 
 
 escribirArchivo:
@@ -217,23 +239,26 @@ escribirArchivo:
 	sw      t2, 40(sp)  # cargo en t2 PALABRA size
 	sw      t4, 56(sp)
 
-	li  v0, SYS_write   # write
-	lw  a0, 8(sp)       # cargo en a0 el fno del archivo de salida
-	lw  a1, 36(sp)      # cargo en a1 la direccion del buffer de salida
-	lw  a2, 12(sp)      # cargo en a2 el tamaño del buffer
+	li  	v0, SYS_write   # write
+	lw  	a0, 8(sp)       # cargo en a0 el fno del archivo de salida
+	lw  	a1, 36(sp)      # cargo en a1 la direccion del buffer de salida
+	lw  	a2, 12(sp)      # cargo en a2 el tamaño del buffer
 	syscall
 
-	bne	a3, zero, write_error    #verifico error de escritura
+	bne		a3, zero, write_error    #verifico error de escritura
 
-	add t0, zero, zero
-	sw  t0, 24(sp)      # guardo en stack SALIDA pos = 0
+	lw 		t2, 84(sp) 		# busco la marca de fin de procesamiento
+	bnez	t2, palindromoReturn	# si la marca esta en 1 salgo del programa
+
+	add 	t0, zero, zero
+	sw  	t0, 24(sp)      # guardo en stack SALIDA pos = 0
 
 	lw      t2, 40(sp)  # cargo en t2 PALABRA size
 	lw      t4, 56(sp)
 	beq     t4, t2, write_endofline
 
-	lw     t8, 76(sp)
-	beq    t8, zero, llenarBufferSalida
+	lw		t8, 76(sp)
+	beq 	t8, zero, llenarBufferSalida
 	
 	sw  t0, 48(sp)      # guardo en stack SALIDA size = 0
 
@@ -248,7 +273,7 @@ read_error:
 	syscall
 
 free_memory:
-	sw 		ra, 40(sp)
+	sw 		ra, 80(sp)
 
 	lw      a0, 28(sp)
 	jal     myfree
@@ -259,7 +284,7 @@ free_memory:
 	lw      a0, 36(sp)
 	jal     myfree
 
-	lw 		ra, 40(sp)
+	lw 		ra, 80(sp)
 	j       ra
 
 palindromoReturn:
@@ -272,6 +297,6 @@ palindromoReturn:
 	lw	gp,  68(sp)
 	lw	$fp, 64(sp)
 
-	addu	sp, sp, 84
+	addu	sp, sp, 88
 	j	    ra
 	.end	palindrome

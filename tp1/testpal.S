@@ -91,4 +91,3 @@ return:
 	j	    ra
 	.end	testpal
 
-    
