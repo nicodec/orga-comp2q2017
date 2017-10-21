@@ -194,6 +194,7 @@ llenarBufferSalida:
 
 write_endofline:
     # sino => se termino la palabra -> guardo \n en buffer salida
+    lw      t6, 12(sp)              # cargo en t6 SALIDA max size
     lw      t3, 24(sp)      # cargo en t3 SALIDA pos
     add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
     lw      t1, 36(sp)      # cargo en t1 SALIDA addr
@@ -213,6 +214,9 @@ write_endofline:
 
 escribirArchivo:
 	# write buffer_salida -> file_out
+    sw      t2, 40(sp)  # cargo en t2 PALABRA size
+    sw      t4, 56(sp)
+
     li  v0, SYS_write   # write
     lw  a0, 8(sp)       # cargo en a0 el fno del archivo de salida
     lw  a1, 36(sp)      # cargo en a1 la direccion del buffer de salida
@@ -224,6 +228,8 @@ escribirArchivo:
     add t0, zero, zero
     sw  t0, 24(sp)      # guardo en stack SALIDA pos = 0
 
+    lw      t2, 40(sp)  # cargo en t2 PALABRA size
+    lw      t4, 56(sp)
     beq     t4, t2, write_endofline
 
     lw     t8, 76(sp)
