@@ -290,3 +290,4 @@ palindromoReturn:
 	addu	sp, sp, 88
 	j	    ra
 	.end	palindrome
+

@@ -7,11 +7,11 @@
 \contentsline {subsection}{\numberline {4.1}Corridas de Prueba}{4}
 \contentsline {section}{\numberline {5}An\IeC {\'a}lisis}{4}
 \contentsline {section}{\numberline {6}Conclusi\IeC {\'o}n}{5}
-\contentsline {section}{\numberline {A}Stacks de Funciones}{5}
+\contentsline {section}{\numberline {A}Stacks de Funciones}{6}
 \contentsline {subsection}{\numberline {A.1}Stack palindromo}{6}
-\contentsline {subsection}{\numberline {A.2}Stack testpal}{6}
+\contentsline {subsection}{\numberline {A.2}Stack testpal}{7}
 \contentsline {section}{\numberline {B}C\IeC {\'o}digo en C}{7}
 \contentsline {section}{\numberline {C}Funci\IeC {\'o}n Pal\IeC {\'\i }ndromo en MIPS}{10}
-\contentsline {section}{\numberline {D}Funci\IeC {\'o}n testpal}{14}
+\contentsline {section}{\numberline {D}Funci\IeC {\'o}n testpal}{15}
 \contentsline {section}{\numberline {E}Funci\IeC {\'o}n testpal en C}{16}
-\contentsline {section}{\numberline {F}Enunciado}{16}
+\contentsline {section}{\numberline {F}Enunciado}{17}

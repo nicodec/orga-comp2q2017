@@ -88,5 +88,3 @@ return:
 	addu	sp, sp, 56
 	j	    ra
 	.end	myremalloc
-
-	
