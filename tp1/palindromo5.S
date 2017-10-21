@@ -199,9 +199,9 @@ llenarBufferSalida:
 	sw      t3, 24(sp)      # guardo SALIDA pos en el stack
 
 	lw      t6, 12(sp)              # cargo en t6 SALIDA max size
-	# lw      t7, 48(sp)              # cargo en t7 SALIDA size
-	# addi    t7, t7, 1               # SALIDA size +1
-	# sw      t7, 48(sp)              # guardo SALIDA size en el stack
+	#lw      t7, 48(sp)              # cargo en t7 SALIDA size
+	#addi    t7, t7, 1               # SALIDA size +1
+	#sw      t7, 48(sp)              # guardo SALIDA size en el stack
 	seq     t5, t6, t3
 	#add     t7, t4, 1
 	slt     t7, t7, t2
@@ -230,7 +230,6 @@ write_endofline:
 
 	beq     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
 
-	#b llenarBufferSalida
 	b leoByte
 
 
@@ -274,16 +273,12 @@ read_error:
 
 free_memory:
 	sw 		ra, 80(sp)
-
 	lw      a0, 28(sp)
 	jal     myfree
-
 	lw      a0, 32(sp)
 	jal     myfree
-
 	lw      a0, 36(sp)
 	jal     myfree
-
 	lw 		ra, 80(sp)
 	j       ra
 
