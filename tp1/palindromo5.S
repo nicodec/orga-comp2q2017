@@ -218,8 +218,8 @@ write_endofline:
 	sb      t7, 0(t1)       # SALIDA[j] = '\n'
 	addi    t3, t3, 1       # j + 1
 	sw      t3, 24(sp)      # guardo SALIDA pos en el stack
-	#add     t8, zero, 1
-	#sw      t8, 76(sp)
+	add     t8, zero, 1
+	sw      t8, 76(sp)
 	add     t4, t4, 1
 	sw      zero, 40(sp)
 
@@ -251,8 +251,9 @@ escribirArchivo:
 	lw      t4, 56(sp)
 	beq     t4, t2, write_endofline
 
-	#lw		t8, 76(sp)
+	lw		t8, 76(sp)
 	#beq 	t8, zero, llenarBufferSalida
+	blt t4, t2, llenarBufferSalida
 	
 	#sw  t0, 48(sp)      # guardo en stack SALIDA size = 0
 
