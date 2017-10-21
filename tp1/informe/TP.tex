@@ -218,9 +218,12 @@ All 9 tests passed!!!
 \end{lstlisting}
 
 \section{Análisis}
-Hemos utilizado este programa para analizar los tiempos de las llamadas al kernel. Las syscalls son llamadas al sistema, lo que requiere un cambio de entorno (de modo usuario a modo kernel).
+Hemos utilizado este programa para analizar los tiempos de las llamadas al kernel. Las syscalls son llamadas al sistema, lo que requiere un cambio de entorno (de modo usuario a modo kernel), y esto consume mayor tiempo que si no se hiciese un cambio de entorno.
 
 Como se provee un buffer de entrada y de salida al modificar el tamaño de estos, estamos disminuyendo o aumentando los syscalls read y write, es decir, cuanto mayor el tamaño del buffer menor cantidad de syscalls y viceversa.
+
+Lo que esperamos obtener como resultado es que al tener un buffer pequeño (por ejemplo de 1 byte) la cantidad de syscalls (la cantidad de syscalls read va a ser la cantidad de letras(bytes) que tenga el archivo) sea mucha, y por lo tanto obtendremos un tiempo de ejecución mayor que el tiempo de ejecucion del mismo programa pero con un buffer mayor (por ejemplo de 1000 bytes, si el archivo es menor o igual al tamaño del buffer haremos un solo read).
+El costo de tener un buffer de mayor tamaño es el espacio utilizado por el programa. Esta claro que cuanto mayor sea el buffer mayor sera la memoria requerida por el programa.
 
 Para realizar este análisis utilizamos un archivo de texto como entrada de un tamaño de N bytes. Luego medimos los tiempos de ejecucion del programa. A continuacion se muestra una tabla con los resultados:
 

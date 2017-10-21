@@ -268,16 +268,12 @@ read_error:
 
 free_memory:
 	sw 		ra, 80(sp)
-
 	lw      a0, 28(sp)
 	jal     myfree
-
 	lw      a0, 32(sp)
 	jal     myfree
-
 	lw      a0, 36(sp)
 	jal     myfree
-
 	lw 		ra, 80(sp)
 	j       ra
 
