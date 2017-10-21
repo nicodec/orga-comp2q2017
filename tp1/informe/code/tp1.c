@@ -127,21 +127,11 @@ int main(int argc, char *argv[]) {
     }
 
     /* ejecucion del programa */
-    char *msg = "Estoy probando mips!!!\n";
-	write(1, msg, mystrlen(msg));
 
     int file_in = fileno(input_file);
     int file_out = fileno(output_file);
 
-    printf("file_in: %i\nibuf: %zu\nfile_out: %i\nobuf: %zu\n",
-            file_in,ibuf,file_out,obuf);
-
-    
     int a = palindrome(file_in,ibuf,file_out,obuf);
-
-
-    printf("a: %i\n",a);
-    
     
     if (input == 0){
         fclose(input_file);
@@ -149,8 +139,6 @@ int main(int argc, char *argv[]) {
     if (output == 0){
         fclose(output_file);
     }
-
-    printf("sali bien\n");
 
     return 0;
 }

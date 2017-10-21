@@ -1,0 +1,30 @@
+#!/bin/bash
+echo "Analisis I:1 O:1"
+time ./tp5 -i analisis -o analisis_test -I 1 -O 1
+
+echo "Analisis I:10 O:1"
+time ./tp5 -i analisis -o analisis_test -I 10 -O 1
+
+echo "Analisis I:100 O:1"
+time ./tp5 -i analisis -o analisis_test -I 100 -O 1
+
+echo "Analisis I:1000 O:1"
+time ./tp5 -i analisis -o analisis_test -I 1000 -O 1
+
+echo "Analisis I:10 O:10"
+time ./tp5 -i analisis -o analisis_test -I 10 -O 10
+
+echo "Analisis I:100 O:100"
+time ./tp5 -i analisis -o analisis_test -I 100 -O 100
+
+echo "Analisis I:1000 O:1000"
+time ./tp5 -i analisis -o analisis_test -I 1000 -O 1000
+
+echo "Analisis I:1 O:10"
+time ./tp5 -i analisis -o analisis_test -I 1 -O 10
+
+echo "Analisis I:1 O:100"
+time ./tp5 -i analisis -o analisis_test -I 1 -O 100
+
+echo "Analisis I:1 O:1000"
+time ./tp5 -i analisis -o analisis_test -I 1 -O 1000

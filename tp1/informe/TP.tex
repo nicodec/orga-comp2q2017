@@ -223,7 +223,8 @@ Como se provee un buffer de entrada y de salida al modificar el tamaño de estos
 Lo que esperamos obtener como resultado es que al tener un buffer pequeño (por ejemplo de 1 byte) la cantidad de syscalls (la cantidad de syscalls read va a ser la cantidad de letras(bytes) que tenga el archivo) sea mucha, y por lo tanto obtendremos un tiempo de ejecución mayor que el tiempo de ejecucion del mismo programa pero con un buffer mayor (por ejemplo de 1000 bytes, si el archivo es menor o igual al tamaño del buffer haremos un solo read).
 El costo de tener un buffer de mayor tamaño es el espacio utilizado por el programa. Esta claro que cuanto mayor sea el buffer mayor sera la memoria requerida por el programa.
 
-Para realizar este análisis utilizamos un archivo de texto como entrada de un tamaño de N bytes. Luego medimos los tiempos de ejecucion del programa. A continuacion se muestra una tabla con los resultados:
+Para realizar este análisis utilizamos un archivo de texto como entrada de un tamaño de 317.520 bytes, el cual consiste de muchos palindromos para que el programa utilice la syscall de write. Luego medimos los tiempos de ejecucion del programa. Para ello se provee con un script llamado \texttt{time\_analisis}.
+A continuación se muestra una tabla con los resultados:
 
 \begin{table}[h]
 	\centering
@@ -232,31 +233,35 @@ Para realizar este análisis utilizamos un archivo de texto como entrada de un t
 		\hline
 		Tamaño Buffer Entrada & Tamaño Buffer Salida & Tiempo Ejecucion \\
 		\hline
-		1 & 1 & - \\
+		1 & 1 & 15.918s\\
 		\hline
-		10 & 10 & - \\
+		10 & 10 & 2.352s\\
 		\hline
-		100 & 100 & - \\
+		100 & 100 & 0.566s\\
 		\hline
-		1000 & 1000 & - \\
+		1000 & 1000 & 0.402s\\
 		\hline
-		10 & 1 & - \\
+		10 & 1 & 10.348s\\
 		\hline
-		100 & 1 & - \\
+		100 & 1 & 9.531s\\
 		\hline
-		1000 & 1 & - \\
+		1000 & 1 & 9.375s\\
 		\hline
-		1 & 10 & - \\
+		1 & 10 & 7.699s\\
 		\hline
-		1 & 100 & - \\
+		1 & 100 & 6.652s\\
 		\hline
-		1 & 1000 & - \\
+		1 & 1000 & 6.531s\\
 		\hline
 	\end{tabular}
 \end{table}
 
+Se ve claramente como las ejecuciones con buffers mas grandes tardan un tiempo considerablemente menor al que los que tienen buffers de menor tamaño. Siendo el más lento el de buffers de tamaño 1 y 1 y el más rápido el de tamaño 1000 y 1000.
+
+Por lo tanto el analisis cumple con lo que predijimos anteriormente.
+
 \section{Conclusión}
-De este trabajo práctico nos llevamos principalmente que es muy importante la experiencia y conocimiento de las instrucciones de Assembly para mips 32 y como usarlas eficientemente. También, pudimos ver por nuestros propios ojos como puede llegar a afectar al tiemo de ejecución de un progama la cantidad de syscalls que se realizan. Acotando las syscalls de read y de write con la utilización de un buffer de escritura y otro de lectura, vimos un speed up global del programa.
+De este trabajo práctico nos llevamos principalmente que es muy importante la experiencia y conocimiento de las instrucciones de Assembly para mips 32 y como usarlas eficientemente. También, pudimos ver por nuestros propios ojos como puede llegar a afectar al tiempo de ejecución de un programa la cantidad de syscalls que se realizan. Acotando las syscalls de read y de write con la utilización de un buffer de escritura y otro de lectura, vimos un speed up global del programa.
 Como dijimos previamente, cada syscall implica un cambio de entorno de modo usuario a modo kernel. Y si se repite consistemente este 'switch', el tiempo de ejecución del programa se ve fuertemente afectado. Por esto, siempre que se pueda acotar la cantidad de llamadas al sistema de un programa, se debería tratar de optimizarlas. En este caso particular, se acotó esa cantidad usando los buffers. 
 Fue muy importante también el uso de un debugger para poder arreglar problemas durante la codificación.
 
@@ -292,7 +297,7 @@ El siguiente código corresponde al cuerpo principal del programa. Se encarga de
 \section{Función Palíndromo en MIPS}
 Esta función escrita en MIPS es la que corresponde a la pedida en el enunciado, en ella se llama a mymalloc y a testpal (descripta en la próxima sección).
 
-\lstinputlisting[language=C]{code/palindromo3.S}
+\lstinputlisting[language=C]{code/palindromo.S}
 
 \section{Función testpal}
 Hemos desarrollado una función testpal.S la cual recibe en a0 la dirección de la palabra a evaluar, en a1 la longitud de la palabra y devuelve en v0: 0 si la palabra es palíndromo o 1 si no lo es.
