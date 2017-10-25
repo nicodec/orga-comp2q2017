@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 FAILED_TESTS=0
 TOTAL_TESTS=0
@@ -26,7 +26,7 @@ test_file() {
 }
 
 execute_program() {
-	./tp5 -i $1 -o $2
+	./tp1 -i $1 -o $2
 }
 
 make_test() {
