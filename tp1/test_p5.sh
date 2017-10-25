@@ -62,18 +62,19 @@ echo
 
 # ------------- Sector de PRUEBAS----------------------------------------------
 
-make_test one_letter_a "a " "a"
-make_test empty_file "" "\n"
-make_test no_palindroms "as ba dsjais hola este test no tiene palindromos " "\n"
-make_test todos_palindromos "arribalabirra somos " "arribalabirra\nsomos\n"
-make_test varias_lineas "hola\neste es un documento con muchas lineas\nneuquen es un palindromo\ny menem tambien " "neuquen\ny\nmenem\n"
-make_test all_letters "a b c d e f g h i " "a\nb\nc\nd\ne\nf\ng\nh\ni\n"
-make_test case_sensitive "Somos es palindromo y NeuQuen tambien" "Somos\ny\nNeuQuen\n"
-make_test numbers_and_letters "939 6a6 528dsa 528 ab " "939\n6a6\n"
+make_test one_letter_a "a " "a\n"
+make_test empty_file "" ""
+make_test no_palindroms "as ba dsjais hola este test no tiene palindromos " ""
+make_test todos_palindromos "arribalabirra y somos " "arribalabirra\nsomos\n"
+make_test varias_lineas "hola\neste es un documento con muchas lineas\nneuquen es un palindromo\ny entonces menem tambien " "neuquen\ny\nmenem\n"
+make_test all_letters "a un b dos c tres d cuatro e cinco f seis g siete h ocho i " "a\nb\nc\nd\ne\nf\ng\nh\ni\n"
+make_test case_sensitive "Somos es palindromo NeuQuen tambien" "Somos\nNeuQuen\n"
+make_test numbers_and_letters "939 dsa 6a6 528dsa 528 ab " "939\n6a6\n"
 make_test text_with_dash "so_m_os " "so_m_os\n"
 make_test text_with_middledash "s-a-s " "s-a-s\n"
-make_test text_with_dots "a.b.c " "a\nb\nc\n"
-make_test long_text "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"
+make_test text_with_dots "a.db.c " "a\nc\n"
+make_test long_text "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"
+
 # Agregar pruebas aca
 
 # -----------------------------------------------------------------------------
