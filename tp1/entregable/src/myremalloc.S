@@ -50,8 +50,8 @@ myremalloc:
 #	copio lo que habia en el viejo buffer al nuevo 
 #	posicion por posicion
 copiar:
-	lw 		t6, 0(t4)		# aux = viejo[i]
-	sw		t6, 0(t5)		# nuevo[i] = aux
+	lb 		t6, 0(t4)		# aux = viejo[i]
+	sb		t6, 0(t5)		# nuevo[i] = aux
 
 	add 	t0, t0, 1		# i = i + 1
 	add 	t4, t4, 1		# siguiente posicion de viejo
