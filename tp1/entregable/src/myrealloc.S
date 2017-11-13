@@ -4,9 +4,9 @@
 	.text
 	.align	2
 
-	.globl	myremalloc
-	.ent	myremalloc    
-myremalloc:
+	.globl	myrealloc
+	.ent	myrealloc    
+myrealloc:
     .frame $fp, 56, ra
 	.set	noreorder
 	.cpload	t9
@@ -87,4 +87,4 @@ return:
 
 	addu	sp, sp, 56
 	j	    ra
-	.end	myremalloc
+	.end	myrealloc
