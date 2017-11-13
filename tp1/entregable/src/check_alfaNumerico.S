@@ -78,7 +78,7 @@ check_alfaNumerico:
 	##	return 1;
 	################# FIN BLOQUE DE PSEUDOCODIGO ###############
 
-	lw 		t2, 40($fp) 	# pongo en t2 la palabra que se va a analizar
+	lb 		t2, 40($fp) 	# pongo en t2 la palabra que se va a analizar
 
 checker:
 	# chequeo si el caracter ingresado es alfanumerico o '-' o '_'
@@ -101,6 +101,8 @@ checker:
 
 	lw 		a0, buffer_word
 	lw		a1, word_size
+	move 	a2, t2
+	lw 		a3, word_max_size
 	jal 	putch
 	sw 		a1, word_size
 
@@ -114,6 +116,7 @@ alfanum_char:
 	li 		v0, 1
 
 return:
+	lw	a0, 40($fp)
 
 	# restauro callee-saved regs
 	lw	gp, 24(sp)

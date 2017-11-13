@@ -5,6 +5,18 @@
 #include <sys/syscall.h>
 #include <mips/regdef.h>
 
+	.data
+buffer_entrada:		.word	1
+entrada_size:		.word	1
+entrada_read_pos:	.word	1
+
+buffer_salida:	.word	1
+salida_size:	.word	1
+
+buffer_word: 	.word	1
+word_max_size:	.word	1
+word_size:		.word	1
+
 	.text
 	.align  2
 
@@ -37,10 +49,10 @@ palindrome:
 	sw  gp,  68(sp)
 	sw  $fp, 64(sp)
 	
-	sw  a0, 0(sp)       #file_in
-	sw  a1, 4(sp)       #ibuf
+	sw  a0, 16(sp)       #file_in
+	sw  a1, entrada_size       #ibuf
 	sw  a2, 8(sp)       #file_out
-	sw  a3, 12(sp)      #obuf
+	sw  a3, salida_size      #obuf
 
 	move    $fp, sp
 
@@ -57,13 +69,13 @@ palindrome:
 	add t0, zero, zero
 	sw  t0, word_size      # guardo el tamaño del buffer (incialmente vacio)
 	
-	lw  a0, 4(sp)       # cargo el parametro para mymalloc
+	lw  a0, entrada_size       # cargo el parametro para mymalloc
 	jal mymalloc        # llamo a la funcion
 	sw  v0, buffer_entrada      # guardo la direccion de memoria reservada para el buffer de ENTRADA
 	add t0, zero, zero
 	sw  t0, 44(sp)      # guardo el tamaño del buffer (incialmente vacio)
 
-	lw  a0, 12(sp)      # cargo el parametro para mymalloc
+	lw  a0, salida_size      # cargo el parametro para mymalloc
 	jal mymalloc        # llamo a la funcion
 	sw  v0, buffer_salida      # guardo la direccion de memoria reservada para el buffer de SALIDA
 	add t0, zero, zero
@@ -80,9 +92,9 @@ leerArchivo:
 	#read file_in -> buffer_entrada (I Bytes)
 
 	li  	v0, SYS_read    # ver dentro de <sys/syscall.h>.
-	lw  	a0, 0(sp)       # a0: file descriptor number.
+	lw  	a0, 16(sp)       # a0: file descriptor number.
 	lw  	a1, buffer_entrada      # a1: data pointer.
-	lw  	a2, 4(sp)       # a2: available space.
+	lw  	a2, entrada_size       # a2: available space.
 	syscall
 
 	bne 	a3, zero, read_error    #verifico error de lectura
@@ -188,7 +200,7 @@ llenarBufferSalida:
 	sw      t3, 24(sp)      # guardo SALIDA pos en el stack
 	sw 		t4, 56(sp)
 
-	lw      t6, 12(sp)              # cargo en t6 SALIDA max size
+	lw      t6, salida_size              # cargo en t6 SALIDA max size
 
 	beq     t6, t3, escribirArchivo # si se llena el buffer escribo
 	
@@ -197,7 +209,7 @@ llenarBufferSalida:
 
 write_endofline:
 	# sino => se termino la palabra -> guardo \n en buffer salida
-	lw      t6, 12(sp)              # cargo en t6 SALIDA max size
+	lw      t6, salida_size              # cargo en t6 SALIDA max size
 	lw      t3, 24(sp)      # cargo en t3 SALIDA pos
 	add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
 	lw      t1, buffer_salida      # cargo en t1 SALIDA addr

@@ -2,6 +2,8 @@
 #include <mips/regdef.h>
 
 	.text
+
+    .abicalls
 	.align	2
 
 	.globl	testpal
@@ -98,3 +100,6 @@ return:
 	jr	    ra
 	.end	testpal
 
+    .size   testpal,.-testpal
+
+    .rdata
