@@ -9,6 +9,9 @@
 	.align	2
 
 	.globl	palindrome
+	.globl 	buffer_entrada
+	.globl 	buffer_salida
+	.globl 	buffer_palabra
 	.ent	palindrome
 palindrome:
 	.frame $fp, 48, ra
@@ -32,31 +35,31 @@ palindrome:
 
 	li	a0, 15		# cargo el parametro para mymalloc
     jal	mymalloc	# llamo a la funcion
-    sw 	v0, 20(sp)		# guardo la direccion de memoria reservada para el buffer de PALABRA
+    sw 	v0, buffer_palabra		# guardo la direccion de memoria reservada para el buffer de PALABRA
 
     lw	a0, 4(sp)		# cargo el parametro para mymalloc
     jal	mymalloc	# llamo a la funcion
-    sw 	v0, 24(sp)		# guardo la direccion de memoria reservada para el buffer de ENTRADA
+    sw 	v0, buffer_entrada		# guardo la direccion de memoria reservada para el buffer de ENTRADA
 
     lw	a0, 12(sp)		# cargo el parametro para mymalloc
     jal mymalloc	# llamo a la funcion
-    sw 	v0, 28(sp)		# guardo la direccion de memoria reservada para el buffer de SALIDA
+    sw 	v0, buffer_salida		# guardo la direccion de memoria reservada para el buffer de SALIDA
 
 	add 	t9, zero, zero			# indice para ultima letra de palabra
 prog:
     li	v0, SYS_read    # ver dentro de <sys/syscall.h>.
 	lw	a0, 0(sp)       # a0: file descriptor number.
-	lw	a1, 24(sp)      # a1: data pointer.
+	lw	a1, buffer_entrada      # a1: data pointer.
 	lw	a2, 4(sp)          # a2: available space.
 	syscall
 
     bne	a3, zero, read_error    #verifico error de lectura
 
 	add 	t0, zero, zero		# indice para recorrer el buffer (i)
-	lw		t1, 24(sp)		# cargo la direccion del buffer de etrada en t1
+	lw		t1, buffer_entrada		# cargo la direccion del buffer de etrada en t1
 	lb		t2, 0(t1)			# cargo el primer valor del buffer de entrada en t2
 	move	t7, v0
-	lw		t8, 20(sp)		# guardo la direccion del buffer para palabra
+	lw		t8, buffer_palabra		# guardo la direccion del buffer para palabra
 	beqz 	t7, buffer_write
 
 buffer_word_read:
@@ -89,7 +92,7 @@ buffer_word_read:
 	
 palindrome_check:
 # no se pueden usar los siguientes registros: t0, t1, t2, t7, t9
-	lw 		t8, 20(sp)		#  guardo en t8 la direccion de la palabra
+	lw 		t8, buffer_palabra		#  guardo en t8 la direccion de la palabra
 	add 	t0, t0, 1		# i = i + 1
 	add 	t1, t1, 1
 	lb 		t2, 0(t1)
@@ -144,7 +147,7 @@ buffer_write:
 #escribirArchivo:
     li  v0, SYS_write
     lw  a0, 8(sp)       #cargo en a0 el fno del archivo de salida
-    la  a1, 28(sp)      #cargo en a1 la direccion del buffer de salida
+    la  a1, buffer_salida      #cargo en a1 la direccion del buffer de salida
     lw  a2, 12(sp)      #cargo en a2 el tamaño del buffer (ojo! puede ser mas chico)
     #TODO
 
@@ -157,13 +160,13 @@ buffer_write:
     
 free_buffer:
 
-	lw	a0, 20(sp)
+	lw	a0, buffer_palabra
 	jal myfree		# libero la memoria reservada para el buffer de palabra
 
-	lw	a0, 24(sp)
+	lw	a0, buffer_entrada
 	jal myfree		# libero la memoria reservada para el buffer de entrada
 
-	lw	a0, 28(sp)
+	lw	a0, buffer_salida
 	jal	myfree		# libero la memoria reservada para el buffer de salida
 
 #Si hay IO error tengo que salir
