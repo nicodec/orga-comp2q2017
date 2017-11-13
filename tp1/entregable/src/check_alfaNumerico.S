@@ -3,6 +3,7 @@
 
 .text
 
+.abicalls
 .align 2
 
 .globl check_alfaNumerico
@@ -47,9 +48,9 @@ check_alfaNumerico:
 	# 	+---------------+	|
 	# 24	|	gp	|	/
 	# 	+---------------+
-	# 20	|  t1 (Backup)	|	\
+	# 20	|  		|	|	\
 	# 	+---------------+	|	LTA
-	# 16	|  t0 (Backup)	|	/
+	# 16	|  		|	|	/
 	# 	+---------------+
 	# 12	|		|	\
 	# 	+---------------+	|
@@ -103,11 +104,11 @@ checker:
 	jal 	putch
 	sw 		a1, word_size
 
-	j 		alfanum_char
+	b 		alfanum_char
 
 especial_char:
 	li 		v0, 0
-	j 		return
+	b 		return
 
 alfanum_char:
 	li 		v0, 1
@@ -124,3 +125,6 @@ return:
 	jr	ra
 
 	.end 	check_alfaNumerico
+	.size	check_alfaNumerico,.-check_alfaNumerico
+
+	.rdata

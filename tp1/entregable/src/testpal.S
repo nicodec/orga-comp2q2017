@@ -7,23 +7,28 @@
 	.globl	testpal
 	.ent	testpal    
 testpal:
-    .frame $fp, 36, ra
+
+    .frame $fp, 40, ra
+
+    #bloque para codigo pic
 	.set	noreorder
 	.cpload	t9
 	.set	reorder
 
-    subu	sp, sp, 36
+    #creo stack frame
+    subu	sp, sp, 40
 
+    #bloque para codigo pic
 	.cprestore 24
     
-	sw	ra,  20(sp)
-	sw	$fp, 16(sp)
-    sw	a0,  0(sp)
-	sw	a1, 4(sp)
-    sw  t4, 28(sp)          # no estoy seguro de si se usan previamente por lo tanto los guardo para prevenir sobreescritura
-    sw  t5, 32(sp)
+    # salvando el callee
+	sw	$fp, 28(sp)
+    sw  ra, 32(sp)
 
     move	$fp, sp
+    
+    sw  a0, 40($fp)
+    sw  a1, 44($fp)
 
     move    t4, a1
     add     t5, zero, zero # i = 0
@@ -82,12 +87,14 @@ is_upper:
 	j 		ra
     
 return:
-	move	sp, $fp
-	lw	    ra, 20(sp)
-	lw	    $fp, 16(sp)
-    lw      t4, 28(sp)
-    lw      t5, 32(sp)
-	addu	sp, sp, 36
-	j	    ra
+
+    # restauro callee-saved regs
+    lw      gp, 24(sp)
+	lw	    $fp, 28(sp)
+    lw      ra, 32(sp)
+    # destruyo stack frame
+	addu	sp, sp, 40
+    # vuelvo a funcion llamante
+	jr	    ra
 	.end	testpal
 

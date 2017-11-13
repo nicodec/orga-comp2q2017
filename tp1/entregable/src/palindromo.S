@@ -12,6 +12,7 @@
 
 	.globl 	buffer_entrada
 	.globl	entrada_size
+	.globl 	entrada_read_pos
 
 	.globl 	buffer_salida
 	.globl	salida_size
@@ -70,8 +71,8 @@ palindrome:
 
 	sw 	zero, 84(sp)	# marca fin de proceso
 	add t0, zero, zero
-	sw  t0, 20(sp)      # guardo ENTRADA pos = 0
-	sw  t0, 24(sp)      # guardo PALABRA pos = 0
+	sw  t0, entrada_read_pos      # guardo ENTRADA pos = 0
+	sw  t0, 24(sp)      # guardo SALIDA pos = 0
 
 	###################################################
 
@@ -91,7 +92,7 @@ leerArchivo:
 	beqz 	v0, escribirArchivo # si read no lee nada finalizo el programa
 
 	add 	t0, zero, zero  # en t0 cargo el indice inicial del buffer
-	sw  	t0, 20(sp)      # guardo en el stack ENTRADA pos
+	sw  	t0, entrada_read_pos      # guardo en el stack ENTRADA pos
 	
 	sw  	v0, 44(sp)      # guardo en el stack ENTRADA size
 
@@ -100,7 +101,7 @@ leoByte:
 	beq t5, zero, leerArchivo # si ENTRADA size == 0 => leerArchivo
 
 	# c = leo un byte <- buffer_entrada
-	lw  t0, 20(sp)      # cargo en t0 ENTRADA pos (t0 = i)
+	lw  t0, entrada_read_pos      # cargo en t0 ENTRADA pos (t0 = i)
 	lw  t1, buffer_entrada      # cargo en t1 ENTRADA addr
 	add t1, t1, t0      # sumo ENTRDA addr + pos
 	lb  t2, 0(t1)       # c: t2 = ENTRADA[i]
@@ -108,7 +109,7 @@ leoByte:
 	sub t5, t5, 1       # ENTRADA size - 1
 	add t0, t0, 1       # ENTRADA pos + 1
 	sw  t5, 44(sp)      # guardo en stack ENTRADA size
-	sw  t0, 20(sp)      # guardo en stack ENTRADA pos
+	sw  t0, entrada_read_pos      # guardo en stack ENTRADA pos
 
 testAlfaNumerico:
 	# si c no es alfanumerico tengo que testear
@@ -116,7 +117,7 @@ testAlfaNumerico:
 
 	move 	a0, t2
 	jal 	check_alfaNumerico
-	beqz 	v0, testpal
+	beqz 	v0, test_palindromo
 
     # (ver que el buffer word no se llene)
 	# (si se llena pedir mas memoria, hacer swap con memoria pedida y memoria vieja)
