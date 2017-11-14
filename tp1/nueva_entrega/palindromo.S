@@ -223,7 +223,7 @@ write_endofline:
 
     sw      zero, word_size # reinicio el tamaño de la palabra
 
-	beq     t3, t6, escribirArchivoE # si se llena el buffer escribo (ojo con los indices)
+	beq     t3, t6, escribirArchivoE # si se llena el buffer escribo
 
 	b leoByte
 
