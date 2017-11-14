@@ -62,6 +62,18 @@ cargar_buffer_salida:
 
 	###################### ARGUMENTOS #######################
 	sw 		a0, 40($fp) 	# a0: file_descriptor de salida
+	#########################################################
+
+	############### CARGAR BUFFER DE SALIDA ##################
+	##	Se pasa el contido del buffer que contiene una palabra
+	##	al buffer de salida. Si este se llena se imprime en el
+	##	archivo de output
+	##
+	##	RETORNO:
+	## 	En caso de producirse algun error de escritura se
+	##	se retorna con valor 1. Caso contrario se retorna con
+	##	valor 1.
+	#########################################################
 
 	lw      t2, word_size  			# cargo en t2 PALABRA size
 	add     t4, zero, zero 			# en t4 posicion caracter PALABRA (i = 0)
@@ -89,25 +101,35 @@ llenarBufferSalida:
 	# me fijo si no se termino la palabra
 	blt t4, t2, llenarBufferSalida  # PALABRA pos < PALABRA size => sigo llenando
 
+###########################################################################
+######################### ESCRIBO FIN DE LINEA ############################
+###########################################################################
 write_endofline:
 	# sino => se termino la palabra -> guardo \n en buffer salida
+	lw 		a0, buffer_salida
+	lw 		a1, salida_read_pos
+	li 		a2, 10
+	lw 		a3, salida_size
+	jal 	putch
+
+	beqz 	v0, write_error
+
 	lw      t6, salida_size         # cargo en t6 SALIDA max size
-	lw      t3, salida_read_pos      		# cargo en t3 SALIDA pos
-	add     t7, zero, 10    		# guardo en t7 el valor 10 ('\n')
-	lw      t1, buffer_salida       # cargo en t1 SALIDA addr
-	add     t1, t1, t3      		# en t1 SALIDA addr + pos
-	sb      t7, 0(t1)       		# SALIDA[j] = '\n'
-	addi    t3, t3, 1       		# j + 1
-	sw      t3, salida_read_pos      		# guardo SALIDA pos en el stack
+	sw 		t4, 16($fp)
+	move 	t3, a1
+	sw      a1, salida_read_pos      		# guardo SALIDA pos en el stack
 	add     t4, t4, 1
 
 	sw      zero, word_size
 
 	beq     t3, t6, escribirArchivoE # si se llena el buffer escribo (ojo con los indices)
 
+	li 		v0, 0
 	b return
 
-
+###########################################################################
+################ DESCARGO CONTENIDO DE SALIDA EN ARCHIVO ##################
+###########################################################################
 escribirArchivo:
 	# write buffer_salida -> file_out
 	sw      t2, word_size  			# cargo en t2 PALABRA size

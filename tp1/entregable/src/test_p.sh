@@ -4,7 +4,7 @@ FAILED_TESTS=0
 TOTAL_TESTS=0
 
 test_file() {
-	let TOTAL_TESTS=$TOTAL_TESTS+1
+	TOTAL_TESTS=$(($TOTAL_TESTS + 1))
 	if [ ! -f "$1" ]
 	then
 		echo -e "\e[31mNo file $1\e[0m"
@@ -15,9 +15,9 @@ test_file() {
 	fi
 	
 	DIFF=$(diff $1 $2)
-	if [ "$DIFF" != "" ]
+	if [ "$DIFF" -ne "" ]
 	then
-			let FAILED_TESTS=$FAILED_TESTS+1
+			FAILED_TESTS=$(($FAILED_TESTS + 1))
 			echo -e "\e[1;31mTest failed!\e[0m"
 	else
 			echo -e "\e[1;32mTest passed\e[0m"
@@ -84,7 +84,7 @@ make_test long_text "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 echo --------------------
 
-if [ $FAILED_TESTS == 0 ]
+if [ $FAILED_TESTS -eq 0 ]
 then
 	echo -e "\e[92mAll $TOTAL_TESTS tests passed!!!\e[0m"
 else

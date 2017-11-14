@@ -6,10 +6,10 @@
 .abicalls
 .align 2
 
-.globl putch
-.ent putch
+.globl getch
+.ent getch
 
-putch:
+getch:
 	#debugging info: descripcion del stack frame
 	.frame $fp, 40, ra		# ver que a lo mejor 40 no es un buen numero
 
@@ -68,7 +68,9 @@ putch:
 	#################### PSEUDOCODIGO ##########################
 	## 	const char* buffer = a0;
 	## 	int i = a1;
-	##	return buffer[i];
+	## 	char letra = buffer[i];
+	##	a1++;
+	##	return letra;
 	################# FIN BLOQUE DE PSEUDOCODIGO ###############
 
 	lw 		t0, 40($fp)
@@ -81,6 +83,7 @@ putch:
 	return:
 	lw		a0, 40($fp)
 	lw		a1, 44($fp)
+	add 	a1, a1, 1
 
 	# restauro callee-saved regs
 	lw	gp, 24(sp)
@@ -91,8 +94,7 @@ putch:
 	# vuelvo a funcion llamante
 	jr	ra
 
-	.end 	putch
-	.size	putch,.-putch
+	.end 	getch
+	.size	getch,.-getch
 
 	.rdata
-	
