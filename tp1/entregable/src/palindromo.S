@@ -6,6 +6,9 @@
 #include <mips/regdef.h>
 
 	.data
+
+	###################### DECLARACION VARIABLES GLOBALES ######################
+
 buffer_entrada:		.word	1
 entrada_size:		.word	1
 entrada_read_pos:	.word	1
@@ -36,25 +39,75 @@ word_size:		.word	1
 	.ent    palindrome
 	
 palindrome:
-	.frame $fp, 88, ra
+	.frame $fp, 64, ra
+
+	#bloque para codigo pic
 	.set    noreorder
 	.cpload t9
 	.set    reorder
 
-	subu    sp, sp, 88
+	#creo stack frame
+	subu    sp, sp, 64
 	
-	.cprestore 60
+	#bloque para codigo pic
+	.cprestore 48
 	
-	sw  ra,  72(sp)
-	sw  gp,  68(sp)
-	sw  $fp, 64(sp)
-	
-	sw  a0, 16(sp)       #file_in
-	sw  a1, entrada_size       #ibuf
-	sw  a2, 8(sp)       #file_out
-	sw  a3, salida_size      #obuf
+	# salvando el callee
+	sw  ra,  56(sp)
+	sw  $fp, 52(sp)
 
 	move    $fp, sp
+
+	####################### STACK FRAME ######################
+	#	+---------------+
+	# 76	|	a3	|	\	
+	#	+---------------+	|
+	# 72	|	a2	|	|	
+	#	+---------------+	|	ABA CALLER
+	# 68	|	a1	|	|	
+	#	+---------------+	|
+	# 64	|	a0	|	/	
+	#	+---------------+	
+	# 60	|		|	\	
+	#	+---------------+	|
+	# 56	|	ra	|	|	
+	#	+---------------+	|	SRA
+	# 52	|	fp	|	|	
+	#	+---------------+	|
+	# 48	|	gp	|	/
+	#	+---------------+	
+	# 44	|		|	|	\
+	#	+---------------+	
+	# 40	|		|	|	|
+	# 	+---------------+
+	# 36	|	alg	|	|	|
+	# 	+---------------+	
+	# 32	|	alg	|	|	|	LTA
+	# 	+---------------+	
+	# 28	|	alg	|	|	|	
+	# 	+---------------+	
+	# 24	|		|	|	|
+	# 	+---------------+
+	# 20	|  		|	|	|
+	# 	+---------------+	
+	# 16	|  		|	|	/
+	# 	+---------------+
+	# 12	|		|	\
+	# 	+---------------+	|
+	# 08	|		|	|
+	# 	+---------------+	|	ABA CALLEE
+	# 04	|		|	|
+	# 	+---------------+	|
+	# 00	|		|	/
+	# 	+---------------+
+
+	############################ ARGUMENTOS ##########################
+	sw  a0, 64($fp)				# a0: file_in (file_descriptor de entrada)
+	sw 	a1, 68($fp)
+	sw  a1, entrada_size		# a1: ibuf (tamaño del buffer de entrada)
+	sw  a2, 72($fp)				# a2: file_out (file_descriptor de salida)
+	sw 	a3, 76($fp)
+	sw  a3, salida_size			# a3: obuf (tamaño del buffer de salida)
 
 	###################################################
 	#cargo los buffers necesarios para operar
@@ -79,9 +132,9 @@ palindrome:
 	jal mymalloc        # llamo a la funcion
 	sw  v0, buffer_salida      # guardo la direccion de memoria reservada para el buffer de SALIDA
 	add t0, zero, zero
-	sw  t0, 48(sp)      # guardo el tamaño del buffer (incialmente vacio)
+	#sw  t0, 48(sp)      # guardo el tamaño del buffer (incialmente vacio)
 
-	sw 	zero, 84(sp)	# marca fin de proceso
+	sw 	zero, 28(sp)	# marca fin de proceso
 	add t0, zero, zero
 	sw  t0, entrada_read_pos      # guardo ENTRADA pos = 0
 	sw  t0, 24(sp)      # guardo SALIDA pos = 0
@@ -92,7 +145,7 @@ leerArchivo:
 	#read file_in -> buffer_entrada (I Bytes)
 
 	li  	v0, SYS_read    # ver dentro de <sys/syscall.h>.
-	lw  	a0, 16(sp)       # a0: file descriptor number.
+	lw  	a0, 64($fp)       # a0: file descriptor number.
 	lw  	a1, buffer_entrada      # a1: data pointer.
 	lw  	a2, entrada_size       # a2: available space.
 	syscall
@@ -100,7 +153,7 @@ leerArchivo:
 	bne 	a3, zero, read_error    #verifico error de lectura
 
 	seq  	t0, v0, zero
-	sw 		t0, 84(sp) 		# si no se leyeron mas caracteres pongo el flag en 1
+	sw 		t0, 28(sp) 		# si no se leyeron mas caracteres pongo el flag en 1
 	beqz 	v0, escribirArchivo # si read no lee nada finalizo el programa
 
 	add 	t0, zero, zero  # en t0 cargo el indice inicial del buffer
@@ -144,7 +197,7 @@ testAlfaNumerico:
 	b leoByte # vuelvo a leer un byte
 
 reasignar_buffer_palabra:
-	sw 		ra, 80(sp)
+	sw 		ra, 36(sp)
 	lw 		a0, buffer_word
 	lw 		a1, word_max_size
 	mul		a2, a1, 2
@@ -152,8 +205,8 @@ reasignar_buffer_palabra:
 	sw 		v0, buffer_word
 	sw 		a2, word_max_size
 
-	lw 		ra, 80(sp)
-	sw 		a2, 80(sp)
+	lw 		ra, 36(sp)
+	sw 		a2, 36(sp)
 	j 	ra
 
 test_palindromo:
@@ -182,14 +235,14 @@ esPalindromoTrue:
 	lw      t2, word_size  # cargo en t2 PALABRA size
 	#lw  t3, 24(sp)  # cargo en t3 SALIDA pos
 	add     t4, zero, zero # en t4 posicion caracter PALABRA (i = 0)
-	sw 		zero, 56(sp)
-	sw      zero, 76(sp)
+	sw 		zero, 32(sp)
+	#sw      zero, 76(sp)
 
 llenarBufferSalida:
 	lw      t0, buffer_word      # cargo en t0 PALABRA addr
 	lw      t1, buffer_salida      # cargo en t1 SALIDA addr
 	lw      t3, 24(sp)      # cargo en t3 SALIDA pos
-	lw		t4, 56(sp)
+	lw		t4, 32(sp)
 
 	addu    t1, t1, t3      # en t1 SALIDA addr + pos
 	add     t0, t0, t4      # en t0 PALABRA addr + pos
@@ -198,7 +251,7 @@ llenarBufferSalida:
 	addi    t3, t3, 1       # j + 1
 	addi    t4, t4, 1       # i + 1
 	sw      t3, 24(sp)      # guardo SALIDA pos en el stack
-	sw 		t4, 56(sp)
+	sw 		t4, 32(sp)
 
 	lw      t6, salida_size              # cargo en t6 SALIDA max size
 
@@ -209,16 +262,16 @@ llenarBufferSalida:
 
 write_endofline:
 	# sino => se termino la palabra -> guardo \n en buffer salida
-	lw      t6, salida_size              # cargo en t6 SALIDA max size
-	lw      t3, 24(sp)      # cargo en t3 SALIDA pos
-	add     t7, zero, 10    # guardo en t7 el valor 10 ('\n')
-	lw      t1, buffer_salida      # cargo en t1 SALIDA addr
-	add     t1, t1, t3      # en t1 SALIDA addr + pos
-	sb      t7, 0(t1)       # SALIDA[j] = '\n'
-	addi    t3, t3, 1       # j + 1
-	sw      t3, 24(sp)      # guardo SALIDA pos en el stack
-	add     t8, zero, 1
-	sw      t8, 76(sp)
+	lw      t6, salida_size         # cargo en t6 SALIDA max size
+	lw      t3, 24(sp)      		# cargo en t3 SALIDA pos
+	add     t7, zero, 10    		# guardo en t7 el valor 10 ('\n')
+	lw      t1, buffer_salida       # cargo en t1 SALIDA addr
+	add     t1, t1, t3      		# en t1 SALIDA addr + pos
+	sb      t7, 0(t1)       		# SALIDA[j] = '\n'
+	addi    t3, t3, 1       		# j + 1
+	sw      t3, 24(sp)      		# guardo SALIDA pos en el stack
+	#add     t8, zero, 1
+	#sw      t8, 76(sp)
 	add     t4, t4, 1
 	sw      zero, word_size
 
@@ -230,27 +283,27 @@ write_endofline:
 escribirArchivo:
 	# write buffer_salida -> file_out
 	sw      t2, word_size  # cargo en t2 PALABRA size
-	sw      t4, 56(sp)
+	sw      t4, 32(sp)
 
 	li  	v0, SYS_write   # write
-	lw  	a0, 8(sp)       # cargo en a0 el fno del archivo de salida
+	lw  	a0, 72($fp)       # cargo en a0 el fno del archivo de salida
 	lw  	a1, buffer_salida      # cargo en a1 la direccion del buffer de salida
 	lw  	a2, 24(sp)      # cargo en a2 el tamaño del buffer
 	syscall
 
 	bne		a3, zero, write_error    #verifico error de escritura
 
-	lw 		t2, 84(sp) 		# busco la marca de fin de procesamiento
+	lw 		t2, 28(sp) 		# busco la marca de fin de procesamiento
 	bnez	t2, palindromoReturn	# si la marca esta en 1 salgo del programa
 
 	add 	t0, zero, zero
 	sw  	t0, 24(sp)      # guardo en stack SALIDA pos = 0
 
 	lw      t2, word_size  # cargo en t2 PALABRA size
-	lw      t4, 56(sp)
+	lw      t4, 32(sp)
 	beq     t4, t2, write_endofline
 
-	lw		t8, 76(sp)
+	#lw		t8, 76(sp)
 	#beq 	t8, zero, llenarBufferSalida
 	blt t4, t2, llenarBufferSalida
 	
@@ -267,14 +320,14 @@ read_error:
 	syscall
 
 free_memory:
-	sw 		ra, 80(sp)
+	sw 		ra, 36(sp)
 	lw      a0, buffer_word
 	jal     myfree
 	lw      a0, buffer_entrada
 	jal     myfree
 	lw      a0, buffer_salida
 	jal     myfree
-	lw 		ra, 80(sp)
+	lw 		ra, 36(sp)
 	j       ra
 
 palindromoReturn:
@@ -283,11 +336,11 @@ palindromoReturn:
 	move    v0, zero
 	move	sp, $fp
 
-	lw	ra,  72(sp)
-	lw	gp,  68(sp)
-	lw	$fp, 64(sp)
+	lw	ra,  56(sp)
+	lw	$fp, 52(sp)
+	lw	gp,  48(sp)
 
-	addu	sp, sp, 88
+	addu	sp, sp, 64
 	j	    ra
 	.end	palindrome
 
