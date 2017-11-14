@@ -156,7 +156,7 @@ leerArchivo:
 	sw 		t0, 28(sp) 		# si no se leyeron mas caracteres pongo el flag en 1
 	beqz 	v0, escribirArchivo # si read no lee nada finalizo el programa
 
-	add 	t0, zero, zero  # en t0 cargo el indice inicial del buffer
+	move 	t0, zero		# en t0 cargo el indice inicial del buffer
 	sw  	t0, entrada_read_pos      # guardo en el stack ENTRADA pos
 	
 	sw  	v0, 44(sp)      # guardo en el stack ENTRADA size
@@ -192,32 +192,34 @@ testAlfaNumerico:
 	sub 	t6, t6, 1
 	bltzal 	t6, reasignar_buffer_palabra
 			
-	
-	
 	b leoByte # vuelvo a leer un byte
 
 reasignar_buffer_palabra:
 	sw 		ra, 36(sp)
+
 	lw 		a0, buffer_word
 	lw 		a1, word_max_size
 	mul		a2, a1, 2
 	jal 	myrealloc
+
 	sw 		v0, buffer_word
 	sw 		a2, word_max_size
 
 	lw 		ra, 36(sp)
 	sw 		a2, 36(sp)
-	j 	ra
+	j 		ra
 
 test_palindromo:
 
 	#me fijo si buffer_word es palindromo
 	
-	lw  a0, buffer_word      # cargo en a0 la PALABRA addr
-	lw  a1, word_size      # cargo en a1 PALABRA size
-	jal testpal         # esPalindromo(PALABRA addr, PALABRA size)
+	lw  	a0, buffer_word      # cargo en a0 la PALABRA addr
+	lw  	a1, word_size      # cargo en a1 PALABRA size
+	beqz 	a1, leoByte         # si PALABRA size == 0 no hago test_palindromo
 
-	beqz v0, esPalindromoTrue # si v0 = 0 => palindromo true
+	jal 	testpal         # esPalindromo(PALABRA addr, PALABRA size)
+
+	beqz 	v0, esPalindromoTrue # si v0 = 0 => palindromo true
 	
 	# si no es palindromo vacio el buffer PALABRA
 noPalindromo:
@@ -273,9 +275,10 @@ write_endofline:
 	#add     t8, zero, 1
 	#sw      t8, 76(sp)
 	add     t4, t4, 1
+
 	sw      zero, word_size
 
-	beq     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
+	beq     t3, t6, escribirArchivoE # si se llena el buffer escribo (ojo con los indices)
 
 	b leoByte
 
@@ -283,6 +286,7 @@ write_endofline:
 escribirArchivo:
 	# write buffer_salida -> file_out
 	sw      t2, word_size  # cargo en t2 PALABRA size
+escribirArchivoE:
 	sw      t4, 32(sp)
 
 	li  	v0, SYS_write   # write

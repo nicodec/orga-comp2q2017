@@ -28,9 +28,45 @@ testpal:
     sw  ra, 32(sp)
 
     move	$fp, sp
+
+    ####################### STACK FRAME ######################
+    #   +---------------+
+    # 52    |       |   \
+    #   +---------------+   |
+    # 48    |       |   |
+    #   +---------------+   |   ABA CALLER
+    # 44    |   a1  |   |
+    #   +---------------+   |
+    # 40    |   a0  |   /
+    #   +---------------+
+    # 36    |       |   \
+    #   +---------------+   |
+    # 32    |   ra  |   |
+    #   +---------------+   |   SRA
+    # 28    |   fp  |   |
+    #   +---------------+   |
+    # 24    |   gp  |   /
+    #   +---------------+
+    # 20    |       |   |   \
+    #   +---------------+   |   LTA
+    # 16    |       |   |   /
+    #   +---------------+
+    # 12    |       |   \
+    #   +---------------+   |
+    # 08    |       |   |
+    #   +---------------+   |   ABA CALLEE
+    # 04    |       |   |
+    #   +---------------+   |
+    # 00    |       |   /
+    #   +---------------+
     
-    sw  a0, 40($fp)
-    sw  a1, 44($fp)
+    ##################### ARGUMENTOS #######################
+    sw      a0, 40($fp)
+    sw      a1, 44($fp)
+
+    #################### PSEUDOCODIGO ###########################
+    ##
+    ################# FIN BLOQUE DE PSEUDOCODIGO ###############
 
     move    t4, a1
     add     t5, zero, zero # i = 0
@@ -39,7 +75,6 @@ test:
     slti	t0, a1, 2           # si a1 (len palabra) < 2 => es palindromo
 	bne	    t0, zero, esTrue
 
-    #add     a0, a0, t5          # palabra[i]
     lb      t1, 0(a0)           # t1 = palabra[i]
 
     move    t8, t1
@@ -77,11 +112,12 @@ esTrue:
     j return
 
 to_lowercase:
+    #si la letra es uppercase la paso a lowercase solo para el procesamiento
 	sgt 	t7, t8, 64
 	slti	t6, t8, 91
 	add 	t6, t7, t6
 	beq 	t6, 2, is_upper
-	#move 	v0, t8
+
 	j 		ra
 
 is_upper:

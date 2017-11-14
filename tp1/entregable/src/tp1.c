@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     int file_in = fileno(input_file);
     int file_out = fileno(output_file);
 
-    int a = palindrome(file_in,ibuf,file_out,obuf);
+    palindrome(file_in,ibuf,file_out,obuf);
     
     if (input == 0){
         fclose(input_file);
