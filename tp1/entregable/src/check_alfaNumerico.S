@@ -130,4 +130,4 @@ return:
 	.size	check_alfaNumerico,.-check_alfaNumerico
 
 	.rdata
-	
+

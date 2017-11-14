@@ -98,4 +98,4 @@ write_file:
 	.size	write_file,.-write_file
 
 	.rdata
-	
+

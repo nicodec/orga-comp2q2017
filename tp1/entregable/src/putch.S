@@ -115,4 +115,4 @@ putch:
 	.size	putch,.-putch
 
 	.rdata
-	
+
