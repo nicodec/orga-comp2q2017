@@ -43,7 +43,7 @@ myrealloc:
 	# 	+---------------+
 	# 20	|  		|	|	\
 	# 	+---------------+	|	LTA
-	# 16	|  	v0	|	|	/
+	# 16| return value	|	|	/
 	# 	+---------------+
 	# 12	|		|	\
 	# 	+---------------+	|
@@ -59,10 +59,18 @@ myrealloc:
 	sw	a1, 44($fp)			# tamaño a asignado
 	sw	a2, 48($fp)			# tamaño a asignar
 
+##################### CONDICION #########################
+# a2 tiene que ser mayor o igual a a1
+# a2 >= a1
+
 ##########################################################
+
+	sw 		zero, 16($fp)	# en el LTA reservado para el valor de retorno guardo zero
+	blt 	a2, a1, return_error
 
     lw 		a0, 48($fp)
     jal 	mymalloc
+    beqz	v0, return_error
     sw 		v0, 16($fp)		# nueva direccion de memoria
 
     lw		t1, 44($fp) 		# tamaño viejo
@@ -89,6 +97,8 @@ return:
 	lw 		a0, 40($fp)
 	jal		myfree
 
+return_error:
+#	si hubo un error la funcion retorna con valor 0 (zero)
 	#########################################################
 #	guardo en v0 el la direccion de memoria del nuevo buffer y retorno
 	lw 		v0, 16($fp)
