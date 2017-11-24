@@ -120,18 +120,21 @@ palindrome:
 	li  a0, 100					# cargo el parametro para mymalloc
 	sw  a0, word_max_size		# guardo en el stack el tamaño maximo del buffer palabra
 	jal mymalloc				# llamo a la funcion
+    beqz v0, malloc_error_a # verifico error de mymalloc
 	sw  v0, buffer_word			# guardo la direccion de memoria reservada para el buffer de PALABRA
 	add t0, zero, zero
 	sw  t0, word_size 			# guardo el tamaño del buffer (incialmente vacio)
 	
 	lw  a0, entrada_size		# cargo el parametro para mymalloc
 	jal mymalloc				# llamo a la funcion
+    beqz v0, malloc_error_b # verifico error de mymalloc
 	sw  v0, buffer_entrada		# guardo la direccion de memoria reservada para el buffer de ENTRADA
 	add t0, zero, zero
 	sw  t0, 44($fp)				# guardo el tamaño del buffer (incialmente vacio)
 
 	lw  a0, salida_size 		# cargo el parametro para mymalloc
 	jal mymalloc				# llamo a la funcion
+    beqz v0, malloc_error_c # verifico error de mymalloc
 	sw  v0, buffer_salida		# guardo la direccion de memoria reservada para el buffer de SALIDA
 	add t0, zero, zero
 
@@ -205,6 +208,8 @@ reasignar_buffer_palabra:
 	mul		a2, a1, 2
 	jal 	myrealloc
 
+    beqz    v0, realloc_error
+
 	sw 		v0, buffer_word
 	sw 		a2, word_max_size
 
@@ -255,7 +260,7 @@ escribirArchivo_quit:
 
 	bne		v0, zero, write_error   #verifico error de escritura
 
-	b palindromoReturn     			#vuelvo a intentar leer bytes del buffer de entrada
+	b palindromoReturn
 
 write_error:
 read_error:
@@ -265,10 +270,30 @@ read_error:
 	li	a0, 1
 	syscall
 
+realloc_error:
+    jal     free_memory_noword
+    li	v0, SYS_exit
+	li	a0, 1
+	syscall
+
+malloc_error_c:
+    lw      a0, 36(sp)
+    jal     myfree
+malloc_error_b:
+    lw      a0, 32(sp)
+    jal     myfree
+malloc_error_a:
+    lw      a0, 28(sp)
+    jal     myfree
+    li	v0, SYS_exit
+	li	a0, 1
+	syscall
+
 free_memory:
 	sw 		ra, 36($fp)
 	lw      a0, buffer_word
 	jal     myfree
+free_memory_noword:
 	lw      a0, buffer_entrada
 	jal     myfree
 	lw      a0, buffer_salida

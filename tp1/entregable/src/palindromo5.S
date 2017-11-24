@@ -202,6 +202,8 @@ reasignar_buffer_palabra:
 	mul		a2, a1, 2
 	jal 	myrealloc
 
+    beqz    v0, realloc_error
+
 	sw 		v0, buffer_word
 	sw 		a2, word_max_size
 
@@ -315,11 +317,17 @@ escribirArchivoE:
 
 	b leoByte           #vuelvo a intentar leer bytes del buffer de entrada
 
+
 write_error:
 read_error:
 	jal     free_memory
-
 	li	v0, SYS_exit
+	li	a0, 1
+	syscall
+
+realloc_error:
+    jal     free_memory_noword
+    li	v0, SYS_exit
 	li	a0, 1
 	syscall
 
@@ -327,6 +335,7 @@ free_memory:
 	sw 		ra, 36(sp)
 	lw      a0, buffer_word
 	jal     myfree
+free_memory_noword:
 	lw      a0, buffer_entrada
 	jal     myfree
 	lw      a0, buffer_salida
