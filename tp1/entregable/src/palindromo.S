@@ -156,7 +156,7 @@ leerArchivo:
 
 	bne 	a3, zero, read_error	#verifico error de lectura
 
-	beqz 	v0, escribirArchivo_quit 	# si read no lee nada finalizo el programa
+	beqz 	v0, last_check 	# si read no lee nada finalizo el programa
 
 	move 	t0, zero				# en t0 cargo el indice inicial del buffer
 	sw  	t0, entrada_read_pos	# guardo en el stack ENTRADA pos
@@ -251,6 +251,38 @@ llenarBufferSalida:
 	bnez 	v0, write_error
 
 	b leoByte
+###############################################################################
+#                        Testeo el ultimo palindromo                          #
+###############################################################################
+last_check:
+    lw  	a0, buffer_word      	# cargo en a0 la PALABRA addr
+	lw  	a1, word_size      		# cargo en a1 PALABRA size
+	beqz 	a1, palindromoReturn    # si PALABRA size == 0 no hago test_palindromo
+
+	jal 	testpal         		# esPalindromo(PALABRA addr, PALABRA size)
+
+	beqz 	v0, esLastPalindromoTrue 	# si v0 = 0 => palindromo true
+	
+	# si no es palindromo vacio el buffer PALABRA
+noLastPalindromo:
+	move    t0, zero  				# t0 = 0
+	sw      zero, word_size 		# word_size = 0
+	b       escribirArchivo_quit
+
+esLastPalindromoTrue:
+	# buffer_word -> buffer_salida
+	# (hay que fijarse que buffer salida tenga espacio suficiente)
+	# si se llena buffer salida => escribirArchivo
+	# buffer_salida + '\n'
+	# buffer_salida.size ++
+	
+llenarLastBufferSalida:
+	lw 		a0, 72($fp)
+	jal 	cargar_buffer_salida
+	bnez 	v0, write_error
+
+	b escribirArchivo_quit
+###############################################################################
 
 escribirArchivo_quit:
 	# write buffer_salida -> file_out
