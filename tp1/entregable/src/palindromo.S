@@ -11,6 +11,7 @@
 
 buffer_entrada:		.word	1
 entrada_size:		.word	1
+entrada_max_size:	.word	1
 entrada_read_pos:	.word	1
 
 buffer_salida:	.word	1
@@ -28,6 +29,7 @@ word_size:		.word	1
 
 	.globl 	buffer_entrada
 	.globl	entrada_size
+	.globl	entrada_max_size
 	.globl 	entrada_read_pos
 
 	.globl 	buffer_salida
@@ -106,7 +108,7 @@ palindrome:
 	############################ ARGUMENTOS ##########################
 	sw  a0, 64($fp)				# a0: file_in (file_descriptor de entrada)
 	sw 	a1, 68($fp)
-	sw  a1, entrada_size		# a1: ibuf (tamaño del buffer de entrada)
+	sw  a1, entrada_max_size		# a1: ibuf (tamaño del buffer de entrada)
 	sw  a2, 72($fp)				# a2: file_out (file_descriptor de salida)
 	sw 	a3, 76($fp)
 	sw  a3, salida_size			# a3: obuf (tamaño del buffer de salida)
@@ -124,7 +126,7 @@ palindrome:
 	add t0, zero, zero
 	sw  t0, word_size 			# guardo el tamaño del buffer (incialmente vacio)
 	
-	lw  a0, entrada_size		# cargo el parametro para mymalloc
+	lw  a0, entrada_max_size		# cargo el parametro para mymalloc
 	jal mymalloc				# llamo a la funcion
 	sw  v0, buffer_entrada		# guardo la direccion de memoria reservada para el buffer de ENTRADA
 	add t0, zero, zero
@@ -142,44 +144,52 @@ palindrome:
 
 	###################################################
 
-leerArchivo:
+# leerArchivo:
 	#read file_in -> buffer_entrada (I Bytes)
 
-	li  	v0, SYS_read			# ver dentro de <sys/syscall.h>.
-	lw  	a0, 64($fp)				# a0: file descriptor number.
-	lw  	a1, buffer_entrada		# a1: data pointer.
-	lw  	a2, entrada_size		# a2: available space.
-	syscall
+	# li  	v0, SYS_read			# ver dentro de <sys/syscall.h>.
+	# lw  	a0, 64($fp)				# a0: file descriptor number.
+	# lw  	a1, buffer_entrada		# a1: data pointer.
+	# lw  	a2, entrada_max_size		# a2: available space.
+	# syscall
 
-	bne 	a3, zero, read_error	#verifico error de lectura
+	# bne 	a3, zero, read_error	#verifico error de lectura
 
-	beqz 	v0, escribirArchivo_quit 	# si read no lee nada finalizo el programa
+	# beqz 	v0, escribirArchivo_quit 	# si read no lee nada finalizo el programa
 
-	move 	t0, zero				# en t0 cargo el indice inicial del buffer
-	sw  	t0, entrada_read_pos	# guardo en el stack ENTRADA pos
+	# move 	t0, zero				# en t0 cargo el indice inicial del buffer
+	# sw  	t0, entrada_read_pos	# guardo en el stack ENTRADA pos
 	
-	sw  	v0, 44($fp)				# guardo en el stack ENTRADA size
-
+	# sw  	v0, 44($fp)				# guardo en el stack ENTRADA size
 leoByte:
-	lw  t5, 44($fp)      			# cargo en t5 ENTRADA size
-	beq t5, zero, leerArchivo 		# si ENTRADA size == 0 => leerArchivo
 
-	# c = leo un byte <- buffer_entrada
-	lw  t0, entrada_read_pos      	# cargo en t0 ENTRADA pos (t0 = i)
-	lw  t1, buffer_entrada      	# cargo en t1 ENTRADA addr
-	add t1, t1, t0      			# sumo ENTRDA addr + pos
-	lb  t2, 0(t1)       			# c: t2 = ENTRADA[i]
+	lw 		a0, 64($fp)
+	jal 	getch
+
+	bne 	a2, zero, read_error
+
+	lw 		t0, entrada_size
+	beqz 	t0, escribirArchivo_quit
+
+	# lw  t5, 44($fp)      			# cargo en t5 ENTRADA size
+	# beq t5, zero, leerArchivo 		# si ENTRADA size == 0 => leerArchivo
+
+	# # c = leo un byte <- buffer_entrada
+	# lw  t0, entrada_read_pos      	# cargo en t0 ENTRADA pos (t0 = i)
+	# lw  t1, buffer_entrada      	# cargo en t1 ENTRADA addr
+	# add t1, t1, t0      			# sumo ENTRDA addr + pos
+	# lb  t2, 0(t1)       			# c: t2 = ENTRADA[i]
 	
-	sub t5, t5, 1       			# ENTRADA size - 1
-	add t0, t0, 1       			# ENTRADA pos + 1
-	sw  t5, 44($fp)      			# guardo en stack ENTRADA size
-	sw  t0, entrada_read_pos      	# guardo en stack ENTRADA pos
+	# sub t5, t5, 1       			# ENTRADA size - 1
+	# add t0, t0, 1       			# ENTRADA pos + 1
+	# sw  t5, 44($fp)      			# guardo en stack ENTRADA size
+	# sw  t0, entrada_read_pos      	# guardo en stack ENTRADA pos
 
 testAlfaNumerico:
 	# si c no es alfanumerico tengo que testear
 	# si lo que hay en el buffer de word es palindromo
 
-	move 	a0, t2
+	move 	a0, v0
 	jal 	check_alfaNumerico
 	beqz 	v0, test_palindromo
 
