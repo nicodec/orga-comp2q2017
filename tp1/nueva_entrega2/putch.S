@@ -6,10 +6,10 @@
 .abicalls
 .align 2
 
-.globl getch
-.ent getch
+.globl putch
+.ent putch
 
-getch:
+putch:
 	#debugging info: descripcion del stack frame
 	.frame $fp, 40, ra		# ver que a lo mejor 40 no es un buen numero
 
@@ -33,11 +33,11 @@ getch:
 	####################### STACK FRAME ######################
 	
 	#	+---------------+
-	# 52	|		|	\
+	# 52	|	a3	|	\
 	#	+---------------+	|
-	# 48	|		|	|
+	# 48	|	a2	|	|
 	#	+---------------+	|	ABA CALLER
-	# 44	|		|	|
+	# 44	|	a1	|	|
 	#	+---------------+	|
 	# 40	|	a0	|	/
 	# 	+---------------+
@@ -49,9 +49,9 @@ getch:
 	# 	+---------------+	|
 	# 24	|	gp	|	/
 	# 	+---------------+
-	# 20	|  		|	\
+	# 20	|  t1 (Backup)	|	\
 	# 	+---------------+	|	LTA
-	# 16	|  		|	/
+	# 16	|  t0 (Backup)	|	/
 	# 	+---------------+
 	# 12	|		|	\
 	# 	+---------------+	|
@@ -63,51 +63,44 @@ getch:
 	# 	+---------------+
 
 	##################### ARGUMENTOS #######################
-	sw	a0, 40($fp)		# a0: file descriptor archivo de entrada
+	sw	a0, 40($fp)		# a0: puntero buffer
+	sw	a1, 44($fp)		# a1: posicion a insertar
+	sw	a2, 48($fp)		# a2: byte a insertar
+	sw	a3, 52($fp)		# a3: tamaño maximo del buffer
+
 	#################### PSEUDOCODIGO ##########################
 	## 	const char* buffer = a0;
 	## 	int i = a1;
-	## 	char letra = buffer[i];
-	##	a1++;
-	##	return letra;
+	##	if (i == a3) {
+	##		return 0;
+	## 	}
+	##	buffer[i] = a2;
+	##	return 1;
 	################# FIN BLOQUE DE PSEUDOCODIGO ###############
 
-	lw 		t0, entrada_max_size
-	lw 		t1, entrada_size
+	lw 		t0, 44($fp)
+	lw 		t1, 52($fp)
 
-	bne  	t0, t1, read_char
+	bge 	t0, t1, error	# si i > buffer_size devuelvo error
 
-	li  	v0, SYS_read			# ver dentro de <sys/syscall.h>.
-	lw  	a0, 40($fp)				# a0: file descriptor number.
-	lw  	a1, buffer_entrada		# a1: data pointer.
-	lw  	a2, entrada_max_size	# a2: available space.
-	syscall
+	lw 		t2, 40($fp)
+	add 	t2, t2, t0		# adelanto el puntero a la posicion donde quiero grabar
 
-	bne 	a3, zero, error			#verifico error de lectura
+	lb 		t3, 48($fp)
+	sb 		t3, 0(t2)		# guardo el byte en el buffer
 
-	beqz 	v0, return			 	# si read no lee nada finalizo el programa
+	li 		v0, 1 	# Devuelvo 1 como grabado exitoso
 
-	sw  	zero, entrada_read_pos	# guardo en el stack ENTRADA pos
-	
-	sw  	v0, entrada_size		# guardo en el stack ENTRADA size
+	b return
 
-read_char:
-	lw 		t0, buffer_entrada
-	lw		t1, entrada_read_pos
-	add 	t0, t0, t1
-	lb 		v0, 0(t0)
+	error:
+	li v0, 0	# En caso de error devuelvo 0
 
-	addi 	t1, t1, 1				# adelanto el puntero a la siguiente posicion de lectura
-
-	sw 		t1, entrada_read_pos
-	move	a2, zero
-
-	b 		return
-
-error:
-	li 		a2, 1
-return:
+	return:
 	lw		a0, 40($fp)
+	lw		a1, 44($fp)
+	add 	a1, a1, 1
+	lw		a2, 48($fp)
 
 	# restauro callee-saved regs
 	lw	gp, 24(sp)
@@ -118,7 +111,7 @@ return:
 	# vuelvo a funcion llamante
 	jr	ra
 
-	.end 	getch
-	.size	getch,.-getch
+	.end 	putch
+	.size	putch,.-putch
 
 	.rdata

@@ -122,18 +122,21 @@ palindrome:
 	li  a0, 100					# cargo el parametro para mymalloc
 	sw  a0, word_max_size		# guardo en el stack el tamaño maximo del buffer palabra
 	jal mymalloc				# llamo a la funcion
+    beqz v0, malloc_error_a # verifico error de mymalloc
 	sw  v0, buffer_word			# guardo la direccion de memoria reservada para el buffer de PALABRA
 	add t0, zero, zero
 	sw  t0, word_size 			# guardo el tamaño del buffer (incialmente vacio)
 	
 	lw  a0, entrada_max_size		# cargo el parametro para mymalloc
 	jal mymalloc				# llamo a la funcion
+    beqz v0, malloc_error_b # verifico error de mymalloc
 	sw  v0, buffer_entrada		# guardo la direccion de memoria reservada para el buffer de ENTRADA
 	add t0, zero, zero
 	sw  t0, 44($fp)				# guardo el tamaño del buffer (incialmente vacio)
 
 	lw  a0, salida_size 		# cargo el parametro para mymalloc
 	jal mymalloc				# llamo a la funcion
+    beqz v0, malloc_error_c # verifico error de mymalloc
 	sw  v0, buffer_salida		# guardo la direccion de memoria reservada para el buffer de SALIDA
 	add t0, zero, zero
 
@@ -155,7 +158,7 @@ palindrome:
 
 	# bne 	a3, zero, read_error	#verifico error de lectura
 
-	# beqz 	v0, escribirArchivo_quit 	# si read no lee nada finalizo el programa
+	# beqz 	v0, last_check 	# si read no lee nada finalizo el programa
 
 	# move 	t0, zero				# en t0 cargo el indice inicial del buffer
 	# sw  	t0, entrada_read_pos	# guardo en el stack ENTRADA pos
@@ -169,7 +172,7 @@ leoByte:
 	bne 	a2, zero, read_error
 
 	lw 		t0, entrada_size
-	beqz 	t0, escribirArchivo_quit
+	beqz 	t0, last_check
 
 	# lw  t5, 44($fp)      			# cargo en t5 ENTRADA size
 	# beq t5, zero, leerArchivo 		# si ENTRADA size == 0 => leerArchivo
@@ -215,6 +218,8 @@ reasignar_buffer_palabra:
 	mul		a2, a1, 2
 	jal 	myrealloc
 
+    beqz    v0, realloc_error
+
 	sw 		v0, buffer_word
 	sw 		a2, word_max_size
 
@@ -256,6 +261,38 @@ llenarBufferSalida:
 	bnez 	v0, write_error
 
 	b leoByte
+###############################################################################
+#                        Testeo el ultimo palindromo                          #
+###############################################################################
+last_check:
+    lw  	a0, buffer_word      	# cargo en a0 la PALABRA addr
+	lw  	a1, word_size      		# cargo en a1 PALABRA size
+	beqz 	a1, palindromoReturn    # si PALABRA size == 0 no hago test_palindromo
+
+	jal 	testpal         		# esPalindromo(PALABRA addr, PALABRA size)
+
+	beqz 	v0, esLastPalindromoTrue 	# si v0 = 0 => palindromo true
+	
+	# si no es palindromo vacio el buffer PALABRA
+noLastPalindromo:
+	move    t0, zero  				# t0 = 0
+	sw      zero, word_size 		# word_size = 0
+	b       escribirArchivo_quit
+
+esLastPalindromoTrue:
+	# buffer_word -> buffer_salida
+	# (hay que fijarse que buffer salida tenga espacio suficiente)
+	# si se llena buffer salida => escribirArchivo
+	# buffer_salida + '\n'
+	# buffer_salida.size ++
+	
+llenarLastBufferSalida:
+	lw 		a0, 72($fp)
+	jal 	cargar_buffer_salida
+	bnez 	v0, write_error
+
+	b escribirArchivo_quit
+###############################################################################
 
 escribirArchivo_quit:
 	# write buffer_salida -> file_out
@@ -265,7 +302,7 @@ escribirArchivo_quit:
 
 	bne		v0, zero, write_error   #verifico error de escritura
 
-	b palindromoReturn     			#vuelvo a intentar leer bytes del buffer de entrada
+	b palindromoReturn
 
 write_error:
 read_error:
@@ -275,10 +312,30 @@ read_error:
 	li	a0, 1
 	syscall
 
+realloc_error:
+    jal     free_memory_noword
+    li	v0, SYS_exit
+	li	a0, 1
+	syscall
+
+malloc_error_c:
+    lw      a0, 36(sp)
+    jal     myfree
+malloc_error_b:
+    lw      a0, 32(sp)
+    jal     myfree
+malloc_error_a:
+    lw      a0, 28(sp)
+    jal     myfree
+    li	v0, SYS_exit
+	li	a0, 1
+	syscall
+
 free_memory:
 	sw 		ra, 36($fp)
 	lw      a0, buffer_word
 	jal     myfree
+free_memory_noword:
 	lw      a0, buffer_entrada
 	jal     myfree
 	lw      a0, buffer_salida

@@ -192,8 +192,6 @@ testAlfaNumerico:
 	sub 	t6, t6, 1
 	bltzal 	t6, reasignar_buffer_palabra
 			
-	
-	
 	b leoByte # vuelvo a leer un byte
 
 reasignar_buffer_palabra:
@@ -275,7 +273,7 @@ write_endofline:
 	add     t4, t4, 1
 	sw      zero, word_size
 
-	beq     t3, t6, escribirArchivo # si se llena el buffer escribo (ojo con los indices)
+	beq     t3, t6, escribirArchivoE # si se llena el buffer escribo
 
 	b leoByte
 
@@ -283,6 +281,7 @@ write_endofline:
 escribirArchivo:
 	# write buffer_salida -> file_out
 	sw      t2, word_size  # cargo en t2 PALABRA size
+escribirArchivoE:
 	sw      t4, 32(sp)
 
 	li  	v0, SYS_write   # write
